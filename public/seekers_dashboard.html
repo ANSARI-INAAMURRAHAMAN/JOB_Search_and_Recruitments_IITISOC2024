@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <form action="../seeker_profile" method="get">
+        <h2><i class="fa-solid fa-user" style="color: #007bff;"></i> Decide how the recruiters see you</h2>
+        <div class="abc">
+            <button type="submit">
+                <i class="fa-solid fa-user" style="color: #007bff; font-size: 24px;"></i> Profile
+            </button>
+        </div>
+    </form>
+    <form action="../find_jobs" method="post">
+        <label for="job-search">Search jobs by title:</label>
+        <input type="text" id="job-search" placeholder="Search jobs by title" name="name" required>
+        <input type="submit" value='Search'>
+    </form>
+    <p><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your resume</p> 
+    <form action="../resume_upload" method="post" enctype="multipart/form-data">
+        <label for="resume-upload">Upload Resume:</label>
+        <input type="file" id="resume-upload" name="image_res" accept=".pdf,.doc,.docx" required>
+        <input type="submit" value='Post'>
+    </form>
+    <p><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your cover letter</p> 
+    <form action="../cover_letter_upload" method="post" enctype="multipart/form-data">
+        <label for="cover-letter-upload">Upload Cover Letter:</label>
+        <input type="file" id="cover-letter-upload" name="image_cov" accept=".pdf,.doc,.docx" required>
+        <input type="submit" value='Post'>
+    </form>
+</body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+body {
+    background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+form {
+    background-color: #ffffff;
+    padding: 25px;
+    margin: 15px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    transition: transform 0.3s ease;
+}
+form:hover {
+    transform: translateY(-5px);
+}
+form label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 1em;
+    color: #333;
+}
+form input[type="text"],
+form input[type="file"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    margin: 10px 0;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+form input[type="text"]:focus,
+form input[type="file"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 1.1em;
+    color: #333;
+    transition: color 0.3s ease;
+}
+button:hover {
+    color: #007bff;
+}
+button i {
+    margin-right: 10px;
+}
+form input[type="submit"] {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 15px;
+    font-weight: bold;
+}
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+form input[type="submit"]:active {
+    transform: translateY(0);
+}
+p {
+    font-size: 1.2em;
+    color: #333333;
+    margin: 25px 0 10px;
+    text-align: center;
+    font-weight: bold;
+}
+.abc {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+h2 {
+    color: #007bff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    form {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+</style>

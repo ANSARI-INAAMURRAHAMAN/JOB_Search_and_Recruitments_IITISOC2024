@@ -1,0 +1,1 @@
+Conatins all the static html files. Also the multer searches for images folder on local storage so the upload thing might not work if folder images in not present in the public folder. 
