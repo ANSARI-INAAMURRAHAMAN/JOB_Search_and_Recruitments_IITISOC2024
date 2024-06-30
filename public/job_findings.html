@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p style="margin-bottom: 10px;"><strong>Apply here</strong></p>
+            <form action="../apply_jobs" method="post" style="margin-top: 10px;">
+                <input type="submit" value="Apply Now" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;">
+            </form>
+            <p>By applying your resume and cover letter will be automatically sent</p>
+</body>
+</html>
+<script>
+    console.log(`${e.Source}`)
+    /*
+    form.addEventListener('submit',function(e){
+    e.preventDefault()
+    const pay=new FormData(form);
+    const payload=new URLSearchParams(pay);
+    const options={
+        method:'POST',
+        body:payload
+    };
+    fetch('../apply_jobs',options).then(res=>{
+        res.json()
+    }).then(
+        val=>{
+            console.log(responseData)
+        }
+    ).catch(err=>{
+        console.log(err)
+    })
+    })
+    */
+</script>
+<style>
+    *{
+    margin:0px;
+    padding: 0px;
+    scroll-behavior: smooth;
+}
+body{
+    background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .findings{
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: Arial, sans-serif; 
+        text-align: center; 
+        margin-top: 20px; 
+        border: 1px solid #ebe7e7; 
+        border-radius: 8px; padding: 20px; 
+        width: 40%;
+         margin: 0 auto;
+    }
+    </style>
