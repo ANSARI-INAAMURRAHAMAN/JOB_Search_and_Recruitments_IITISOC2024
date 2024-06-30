@@ -1,0 +1,1 @@
+Conatins all the static html files
