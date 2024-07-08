@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.0/moment.min.js"></script>
+</head>
+<body>
+    <div id="chat-container">
+        <ul id="messages"></ul>
+        <form id="chat-form">
+            <input id="message-input" autocomplete="off" />
+            <button type="submit">Send</button>
+        </form>
+    </div>
 
+    <script>
+        // Connect to the server using Socket.IO
+        const socket = io();
+
+        // Get references to the HTML elements
+        const messagesList = document.getElementById('messages');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+
+        // Handle form submission
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                // Emit the message to the server
+                socket.emit('chatMessage', message);
+                messageInput.value = '';
+            }
+        });
+
+        // Handle incoming messages
+        socket.on('chatMessage', (message) => {
+            const li = document.createElement('li');
+            li.innerText = `${moment().format('HH:mm:ss')} - ${message}`;
+            messagesList.appendChild(li);
+        });
+    </script>
+</body>
+</html>
