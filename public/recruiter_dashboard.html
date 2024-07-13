@@ -8,21 +8,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-briefcase"></i> CareerConnect Recruiter Dashboard</h1>
-    </header>
+    
     <main>
         <section class="job-post">
             <h2><i class="fas fa-plus-circle"></i> Post a New Job</h2>
             <form action="../post_jobs" method="post" enctype="multipart/form-data">
                 <label for="job-title">Job Title:</label>
                 <input type="text" id="job-title" placeholder="Enter Job Title" name='title' required>
+
+                <label for="comapny-name">Company Name:</label>
+                <input type="text" id="job-title" placeholder="Enter company name" name='comp' required>
                 
                 <label for="job-description">Job Description:</label>
                 <textarea id="job-description" placeholder="Enter Job Description" name="job_description" required></textarea>
                 
-                <label for="qualifications">Qualifications Required:</label>
-                <textarea id="qualifications" placeholder="Enter Qualifications Required" name="qualifications" required></textarea>
+                <div class="dropdown">
+                    <button type="button" class="dropdown-btn" onclick="toggleDropdown('skills')">Select Skills</button>
+                    <div id="skills-dropdown" class="dropdown-content">
+                        <label><input type="checkbox" name="skills" value="PHP"> PHP</label>
+                        <label><input type="checkbox" name="skills" value="JavaScript"> JavaScript</label>
+                        <label><input type="checkbox" name="skills" value="C++"> C++</label>
+                        <label><input type="checkbox" name="skills" value="Python"> Python</label>
+                        <label><input type="checkbox" name="skills" value="Java"> Java</label>
+                    </div>
+                </div>
                 
                 <div class="location-select">
                     <label for="job-location">Select Job Location:</label>
@@ -63,18 +72,47 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    animation: gradientShift 15s ease infinite;
+    background-size: 400% 400%;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 header {
-    background-color: #2c3e50;
+    background-color: #2f4459;
     color: white;
     text-align: center;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 header h1 {
     margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 4s linear infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(0, 0); opacity: 0.5; }
+    50% { transform: translate(-25%, -25%); opacity: 1; }
+    100% { transform: translate(0, 0); opacity: 0.5; }
 }
 
 main {
@@ -90,15 +128,38 @@ main {
 section {
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     padding: 2rem;
     width: 100%;
     max-width: 500px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
 
 h2 {
     color: #2c3e50;
     margin-top: 0;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #3498db;
+    transition: width 0.3s ease;
+}
+
+section:hover h2::after {
+    width: 100px;
 }
 
 form {
@@ -116,6 +177,16 @@ input[type="file"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus,
+input[type="file"]:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    outline: none;
 }
 
 textarea {
@@ -138,11 +209,65 @@ input[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 input[type="submit"]:hover {
     background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+input[type="submit"]:active {
+    transform: scale(0.95);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.dropdown-content.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-content label {
+    display: block;
+    padding: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-content label:hover {
+    background-color: #f0f0f0;
 }
 
 @media (max-width: 768px) {
@@ -156,4 +281,35 @@ input[type="submit"]:hover {
     }
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+section:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
 </style>
+<script>
+    function toggleDropdown(id) {
+    const dropdown = document.getElementById(id + '-dropdown');
+    dropdown.classList.toggle('show');
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-btn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+</script>
