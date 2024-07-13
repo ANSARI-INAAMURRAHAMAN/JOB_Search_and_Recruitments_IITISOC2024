@@ -2,7 +2,8 @@ const express = require('express');const path=require('path');
 const app = express();
 app.use(express.static('public'));
 const mysql=require('mysql');
-const router = require('./router'); // Import the login signup router
+const router = require('./router'); 
+const router3 = require('./router3.js');
 const{sendFile}=require('fs')
 const { readFile } = require('fs').promises;
 app.use(express.json());
@@ -42,7 +43,8 @@ db.connect((err)=>{
         console.log('Connection Established!')
     }})
 //Reading login and signup files
-let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='', loginHtml1 = '', loginHtml2 = '', loginHtml3 = '', loginHtml4 = '', loginHtml5 = '', loginHtml6 = '', loginHtml7='',loginHtml8='';
+let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='';
+let loginHtml1 = '', loginHtml2 = '', loginHtml3 = '', loginHtml4 = '', loginHtml5 = '', loginHtml6 = '', loginHtml7='',loginHtml8='';
 //to make the reading synchronous
 const readHtmlFiles = async () => {
     loginHtml = await readFile('./public/login_seeker.html', 'utf-8');
@@ -53,13 +55,15 @@ const readHtmlFiles = async () => {
     loginHtml5 = await readFile('./public/recruiter_dashboard.html', 'utf-8');
     loginHtml6 = await readFile('./public/seeker_profile.html', 'utf-8');
     loginHtml7 = await readFile('./public/seeapplicants.html', 'utf-8');
-    loginHtml8 = await readFile('./public/chatwith.html', 'utf-8');
+    loginHtml8 = await readFile('./public/html8.html', 'utf-8');
     loginHtml9 = await readFile('./public/job_findings.html', 'utf-8');
     loginHtml10 = await readFile('./public/show_all_hp.html', 'utf-8');
-    loginHtml11=await readFile('./public/applyerror.html','utf-8')
+    loginHtml11 = await readFile('./public/applyerror.html','utf-8')
 };
+
 let username_seeker=''
 let username_recruiter=''
+
 readHtmlFiles();
 const router2 = require('./router2'); //general home page
 app.get('/login_seeker',(req,res)=>{
@@ -76,91 +80,11 @@ app.get('/signup_recruiter',(req,res)=>{
 })
 //login functions only set up as modules in login.js
 //dashboards and other page
-app.get('/user_seeker', authenticateSeeker,(req,res)=>{
-    console.log( `  seeker dashboard`)
-    username_seeker=req.session.seekerUsername
-    res.send(` <h1>Welcome ${username_seeker}</h1><br> ${loginHtml4}<br>`)
-})
-app.get('/user_recruiter',authenticateRecruiter,(req,res)=>{
-    console.log( `  recruiter dash_board `)
-    username_recruiter=req.session.recruiterUsername;
-    res.send(`<h2>Welcome ${username_recruiter}</h2> ${loginHtml5} <br>`)
-})
 
 app.use('/', router2);
 
-let profile=''
-app.get('/seeker_profile', authenticateSeeker,(req,response)=>{
-    let sql=`SELECT* FROM profile_seeker WHERE username='${username_seeker}'`;
-    db.query(sql,(err,res)=>{
-        if(err){
-            console.log(err)
-        }else if(res.length>0){
-            profile=`${loginHtml6} <div class="profile">
-            <h1>Job Seeker Profile</h1><h2>Set up your profile as visible to the recruiter</h2>
-            <form action="profile_setup.html">
-              <input type="submit" value="Edit Profile" class="edit-btn"></form>
-            <div class="section"><h2>About Me</h2>
-              <div class="about_self">${res[0].description}</div></div>
-            <div class="section"><h2>Skills</h2>
-              <div class="skills">${res[0].skills}</div></div></div>`
-            response.send(`${profile}`)
-        }
-        else{
-            response.redirect(`/see_profile`)
-        }
-    })
-})
-app.get('/see_profile', authenticateRecruiter,(req,response)=>{
-    let sql=`SELECT* FROM profile_seeker WHERE username='${username_seeker}'`;
-    db.query(sql,(err,res)=>{
-        if(err){
-            console.log(err)
-        }else if(res.length>0){
-            profile=`${loginHtml6} <div class="profile">
-             <h2>Applicant's profile summary</h2> <div class="about_self">${res[0].description}</div><br>
-            <h2>Applicant Skills</h2><div class="skills">${res[0].skills}</div></div>
-            ${loginHtml8}`
-            response.send(`${profile}`)
-        }
-        else{
-            response.sendFile(path.join(__dirname, 'public', 'profile_setup.html'));
-        }})
-})
+app.use('/',router3)
 
-app.post('/setup_profile', authenticateSeeker,(req,response)=>{
-     console.log('   setup wala route')
-     let skills = [];
-        const desc = req.body.desc;
-        req.body.skills.forEach(e => {
-            skills.push(e);
-        });
-        let skillString = skills.join(',');
-        let sql = `INSERT INTO profile_seeker VALUES('', '${username_seeker}', '${desc}', '${skillString}')`;
-        db.query(sql, (err, res) => {
-            if (err) {
-                console.log(err);
-            } else {
-                response.redirect('/seeker_profile');
-            }
-        });
-})
-
-app.post('/post_jobs',[upload3.single('image_employer'), authenticateRecruiter],(req,response)=>{
-    let msg1=''
-    const { title, job_description: description, qualifications: requirement, dropdownOptions: location } = req.body;
-    const currentDateTime = new Date().toLocaleString();
-    let sql=`INSERT INTO job_listings VALUES('','${title}','/images_logo/${req.file.filename}',
-    '${description}','${username_recruiter}','${requirement}','${location}',' ','${currentDateTime}')`
-    db.query(sql,(err,res)=>{
-        if(err){
-            msg1=err
-            console.log(err)
-        }
-        else{
-            response.send('Posted')
-        }})
-})
 app.post('/find_jobs', authenticateSeeker,async(req,response)=>{
     let jobs_found=''
     const name=req.body.name;
@@ -173,92 +97,142 @@ app.post('/find_jobs', authenticateSeeker,async(req,response)=>{
         }
         if(res.length>0){
             res.forEach(e=>{
-                jobs_found=jobs_found+`<div class="findings">
-                <h2 style="margin-bottom: 10px; color: #007bff;">${e.job_name} at ${e.Employer}</h2>
-                <div style="margin-bottom: 10px;">
-                    <img src="${e.Source}" width="50" height="80" alt="Logo" style="border-radius: 4px;" > 
-                 </div>    ${loginHtml9}  </div><br>`
+                jobs_found=jobs_found+`<div class="job" data-aos="fade-up">
+                <h3 id="name">${e.job_name}</h3>
+                <div class="company">
+                    <img src="${e.Source}" alt="Company Logo">
+                    <p>${e.Employer}</p></div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>${e.Location}</p> </div>
+                <p>${e.description}.</p>
+                <div class="skills">
+                        <span>${e.requirements}</span>
+                    </div>
+                     <p style="margin-bottom: 10px;"><strong>Apply here</strong></p>
+                     <form action="../apply_jobs?job_name=${e.job_name}&employer=${e.Employer}" method="post" style="margin-top: 10px;">
+                     <input type="submit" value="Apply Now" style="background-color: #007bff; color: white; border: none;
+                     padding: 10px 20px; cursor: pointer; border-radius: 4px;">
+            </form>
+            <p>By applying your resume and cover letter will be automatically sent</p>
+                 </div></div><br>`
             })
-            response.send(`${jobs_found}`)
+            response.send(  `${loginHtml9}`+`<div class="job-listing">
+            ${jobs_found}
+            </div>`)
         }
     else{
         response.send('No jobs found!')
-    }
-}) ; 
+    }}) ; 
 });
+
 
 app.post('/apply_jobs', authenticateSeeker,(req,response)=>{
-        let sql=`UPDATE job_listings
-        SET Applicants =  '${username_seeker}'
-        WHERE employer ='Abhijit kashyap' AND job_name='Web developer' ;`
-        //Replace the names with the one selected by the user...
-        db.query(sql,(err,res)=>{
-            if(err){
-                console.log(err)
-            }
-            else{
-                response.send('Job application Posted!')
-            }
-        })}
-)
+    //console.log(req.query)
+    let abcd=''
+    let search=`SELECT *FROM job_listings WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}'`
+    db.query(search,(err,res)=>{
+        if(err){console.log(err)
+        }
+        else{
+            abcd=res[0].Applicants;
+            console.log(res[0].Applicants)
+            const str = abcd;
+            const searchTerm = req.session.seekerUsername;
 
+            if (str.indexOf(searchTerm) !== -1) {
+                response.send('Already applied')
+            } 
+            
+            else if(abcd===''){
+            let sql=`UPDATE job_listings SET Applicants =  '${req.session.seekerUsername}'
+                WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}' ;`
+                //Replace the names with the one selected by the user...
+            db.query(sql,(err,res)=>{
+                    if(err){console.log(err)
+                    }
+                    else{response.send('Job application Posted!')
+                    }
+                })
+            }
+            else {
+                let updated='';
+                if(abcd.length===0){
+                    updated=req.session.seekerUsername
+                }
+                updated=abcd+','+req.session.seekerUsername
+                let sql_updated=`UPDATE job_listings SET Applicants =  '${updated}'
+                WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}' ;`
+                db.query(sql_updated,(err,res)=>{
+                    if(err){console.log(err)}
+                    else{
+                        response.send('Job application Posted!');
+                    }
+                })
+            }}
+    })
+    })
+
+
+let applicant_list=''
 app.get('/see_applicants_jobs', authenticateRecruiter,(req,response)=>{
-    console.log(' Recruiter')
-    response.send(`<body >
-    <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; max-width: 500px;">
+   let sql=`SELECT Applicants FROM job_listings WHERE employer='${req.session.recruiterUsername}'`
+   let sqlnew=`SELECT job_name,Applicants FROM job_listings WHERE employer='${req.session.recruiterUsername}'`
+   /*let job_name=''
+   db.query(sqlnew,(err,res)=>{
+    if(err){console.log(err)}
+    else{
+        //console.log(res)
+        const pos = res.filter(row => console.log(row));
+    }
+   })
+   */
+   db.query(sqlnew,(err,res)=>{
+    if(err){
+        console.log(err)
+    }
+    if(res.length===0){
+        response.send('No Applicants')
+    }
+    else{
+        let html=''
+        console.log(res)
+        applicant_list=res[0].Applicants.split(',')
+        let arr=[]
+        
+        for(let i=0;i<res.length;i++){
+            res.forEach(e=>{
+                console.log(e)
+            })
+        }
+       res.forEach(e=>{
+       console.log(e.Applicants+e.job_name)
+       html= html+ `<body >
+       <h1>For the role of${e.job_name}</h1>
+        <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd;
+        border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; max-width: 500px;">
         <h2 style="margin-bottom: 20px; color: #007bff;">See the resume for the candidate</h2>
-        <h4 >Name of applicant: ${username_seeker}</h4>
-    ${loginHtml7}`)
+        <h4 >Name of applicant: ${e.Applicants}</h4>
+        <p style="font-size: 16px; color: #333;">See the profile page of the applicant</p>
+        <form action="../see_profile/${e.Applicants}" method="get" style="margin-bottom: 10px;">
+            <input type="submit" value="See Profile" class="btn"
+            style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+        </form>
+    </div>
+        ${loginHtml7}`+`<br>`
+       })
+       
+        response.send(html)
+    }
+   })
 });
-
+/*
+ response.send()
+*/
 const routerUpload = require('./router_upload'); // Adjust the path as needed
 app.use('/', routerUpload);
 
-app.get('/resume', authenticateRecruiter,(req,response)=>{
- 
-    let sql=`SELECT file_name FROM resume INNER
-    JOIN signup_seekers ON resume.User_name='${username_seeker}'`
-    db.query(sql,(err,res)=>{
-        if(err){
-            console.log(err);
-            return response.send('Error');
-        }
-        else if(res.length>0)
-        {    
-            response.send(`<html><body>
-            <div style="font-family: Arial, sans-serif; text-align: center; margin-top: 20px;">
-    <h2 style="margin-bottom: 20px;">Resume of the Client</h2>
-    <embed src="${res[0].file_name}" width="100%" height="500px" type="application/pdf" style="border: 1px solid #ccc; border-radius: 4px;">
-    <br>
-    </div>
-    </body></html>`);
-        }else{
-            response.send(`Candidate has not uploaded the resume`)
-        }
-})}
-)
-
-app.get('/cover_letter', authenticateRecruiter,(req,response)=>{ 
-    
-    let sql=`SELECT filename FROM cover_letter INNER
-    JOIN signup_seekers ON cover_letter.username='${username_seeker}'`
-    db.query(sql,(err,res)=>{
-        if(err){
-            console.log(err);
-            return response.send('Error');
-        }
-        else if(res.length>0)
-        {    
-            response.send(`<html><body style="font-family: Arial, sans-serif; text-align: center; margin-top: 20px;">
-            <h2 style="margin-bottom: 20px;">Cover Letter of the Client</h2>
-            <embed src="${res[0].filename}" width="100%" height="600px" type="application/pdf" style="border: 1px solid #ccc; border-radius: 4px;">
-            <br>
-        </body></html>`);
-        }else{
-            response.send(`Candidate has not uploaded the resume`)
-        }
-    })})
-//When user presses submit it will go to the upload middleware
-
+const router4=require('./router4.js')
+app.use('/',router4)
 
 app.listen(5000)
