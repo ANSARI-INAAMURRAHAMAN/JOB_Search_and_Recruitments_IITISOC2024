@@ -6,15 +6,33 @@
     <title>Document</title>
 </head>
 <body>
-    <p style="margin-bottom: 10px;"><strong>Apply here</strong></p>
-            <form action="../apply_jobs" method="post" style="margin-top: 10px;">
-                <input type="submit" value="Apply Now" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;">
-            </form>
-            <p>By applying your resume and cover letter will be automatically sent</p>
+    <nav>
+        <a href="/"><h1><i class="fas fa-briefcase"></i> CareerConnect</h1></a>
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="search-filter">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search jobs...">
+            <i class="fas fa-filter filter-icon"></i>
+            <select>
+                <option value="">Filter by location</option>
+                <option value="Mountain View, CA">Mountain View, CA</option>
+                <option value="Redmond, WA">Redmond, WA</option>
+                <option value="Boston, MA">Boston, MA</option>
+                <option value="Munich, Germany">Munich, Germany</option>
+            </select>
+        </div>
+    </nav>
+
+    <main>
+        <h2>Job Postings</h2>
+      
+    </main>
+    
 </body>
 </html>
 <script>
-    console.log(`${e.Source}`)
     /*
     form.addEventListener('submit',function(e){
     e.preventDefault()
@@ -35,27 +53,199 @@
     })
     })
     */
+    document.addEventListener("DOMContentLoaded", function() {
+        // Interactive Animations
+        const jobs = document.querySelectorAll(".job");
+
+        jobs.forEach(job => {
+            job.addEventListener("mouseenter", () => {
+                job.style.transform = "scale(1.05)";
+            });
+            job.addEventListener("mouseleave", () => {
+                job.style.transform = "scale(1)";
+            });
+        });
+
+        // Dynamic Menus
+        const hamburger = document.querySelector(".hamburger");
+        const searchFilter = document.querySelector(".search-filter");
+
+        hamburger.addEventListener("click", () => {
+            searchFilter.classList.toggle("active");
+        });
+
+        // Storytelling Animations
+        const headings = document.querySelectorAll("h2, h3");
+        headings.forEach(heading => {
+            heading.classList.add("animate__animated", "animate__fadeInUp");
+        });
+    });
+
+    function toggleMenu() {
+        const searchFilter = document.querySelector('.search-filter');
+        searchFilter.classList.toggle('active');
+    }
 </script>
 <style>
-    *{
-    margin:0px;
-    padding: 0px;
-    scroll-behavior: smooth;
-}
-body{
-    background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        color: #333;
+        overflow-x: hidden;
     }
-    .findings{
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        font-family: Arial, sans-serif; 
-        text-align: center; 
-        margin-top: 20px; 
-        border: 1px solid #ebe7e7; 
-        border-radius: 8px; padding: 20px; 
-        width: 40%;
-        margin: 0 auto;
+
+    nav {
+        background-color: #4a90e2;
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    </style>
+
+    nav h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .search-filter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .search-filter input,
+    .search-filter select {
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .search-filter input {
+        width: 200px;
+    }
+    a{
+        text-decoration:none;
+    }
+    .search-icon,
+    .filter-icon {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .hamburger {
+        display: none;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+    main {
+        padding: 2rem;
+    }
+
+    .job-listing {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .job {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.3s;
+    }
+
+    .job:hover {
+        transform: translateY(-5px);
+    }
+
+    .job h3 {
+        margin-top: 0;
+        color: #4a90e2;
+        font-size: 1.5rem;
+    }
+
+    .job p {
+        margin: 0.5rem 0;
+        line-height: 1.5;
+    }
+
+    .job .skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .job .skills span {
+        background-color: #4a90e2;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .job .location,
+    .job .company {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .job .location i,
+    .job .company i {
+        color: #4a90e2;
+    }
+
+    .job .company img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+    .apply-btn {
+        background-color: #4a90e2;
+        color: white;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .apply-btn:hover {
+        background-color: #357ab8;
+    }
+
+    @media (max-width: 768px) {
+        .search-filter {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .hamburger {
+            display: block;
+        }
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+</head>

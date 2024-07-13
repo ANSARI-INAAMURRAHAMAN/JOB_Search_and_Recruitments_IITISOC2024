@@ -17,14 +17,45 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
     
-    document.getElementById("contact-form").addEventListener('submit',()=>{
-      document.getElementById("input-name").value=''
-      document.getElementById("input-name").focus()
-      document.getElementById("input-message").value=''
-      document.getElementById("input-message").focus()
-      document.getElementById("input-email").value=''
-      document.getElementById("input-email").focus()
-    })
+    const jobCards = document.querySelectorAll('.job-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  jobCards.forEach(card => {
+    card.style.opacity = 0;
+    card.style.transform = 'translateY(20px)';
+    observer.observe(card);
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Add loading animation to form submission
+  const contactForm = document.getElementById('contact-form');
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.classList.add('loading');
+    // Simulate form submission
+    setTimeout(() => {
+      this.classList.remove('loading');
+      this.reset();
+      alert('Message sent successfully!');
+    }, 2000);
+  });
+});
     
     // Night mode toggle functionality
     const nightModeToggle = document.getElementById("night-mode-toggle");
@@ -33,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     nightModeToggle.addEventListener("click", function () {
       body.classList.toggle("night-mode");
     });
-  });
+
   
 
 /*const form=document.querySelector('.form');
