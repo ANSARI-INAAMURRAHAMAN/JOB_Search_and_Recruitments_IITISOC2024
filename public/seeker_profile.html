@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Candidate</title>
 </head>
 <body>
-  <h3>Candidate's profile</h3>
+        <h2><i class="fas fa-user-edit"></i>Edit Your Profile</h2>
+        <form action="profile_setup.html">
+        <input type="submit" value="Edit Profile" class="edit-btn"></form>
 </body>
 </html>
 <style>
@@ -29,6 +32,11 @@
         max-width: 600px;
         width: 100%;
     }
+    .profile-header {
+        text-align: center;
+        width: 100%;
+        padding-bottom: 20px;
+}
     h1 {
         color: #2c3e50;
         text-align: center;
@@ -40,13 +48,17 @@
         margin-bottom: 10px;
     }
     .edit-btn {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
+        background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
         transition: background-color 0.3s;
     }
     .edit-btn:hover {
