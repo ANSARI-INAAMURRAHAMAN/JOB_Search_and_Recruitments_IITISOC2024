@@ -2,155 +2,364 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --background-light: #f5f7fa;
+            --text-light: #2c3e50;
+            --card-bg-light: #ffffff;
+            --background-dark: #2c3e50;
+            --text-dark: #ecf0f1;
+            --card-bg-dark: #34495e;
+            --border-radius: 8px;
+            --transition-time: 0.3s;
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            transition: background-color var(--transition-time) ease, color var(--transition-time) ease;
+            font-size: 16px;
+        }
+
+        body.night-mode {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+nav {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-light);
+    transition: background-color var(--transition-time) ease;
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--text-dark);
+    transition: transform var(--transition-time) ease;
+}
+
+nav h1:hover {
+    transform: scale(1.06);
+}
+
+nav .links {
+    display: flex;
+    align-items: center;
+}
+
+nav .links a {
+    color: var(--text-dark);
+    margin-left: 1.8rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color var(--transition-time) ease, transform var(--transition-time) ease;
+}
+
+nav .links a:hover,
+nav .links a:focus {
+    color: var(--accent-color);
+    transform: translateY(-2px);
+}
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        form {
+            background-color: var(--card-bg-light);
+            padding: 1.5rem;
+            margin: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            width: calc(50% - 2rem);
+            max-width: 500px;
+            transition: transform 0.3s ease, background-color var(--transition-time) ease, box-shadow var(--transition-time) ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .night-mode form {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        form:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: color var(--transition-time) ease;
+            font-size: 1rem;
+        }
+
+        .night-mode form label {
+            color: var(--text-dark);
+        }
+
+        form input[type="text"],
+        form input[type="file"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, background-color var(--transition-time) ease, color var(--transition-time) ease;
+        }
+
+        .night-mode form input[type="text"],
+        .night-mode form input[type="file"] {
+            background-color: var(--card-bg-dark);
+            color: var(--text-dark);
+            border-color: #4a5568;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button, form input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            align-self: flex-start;
+        }
+
+        button:hover, form input[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin: 1rem 0 0.5rem;
+            text-align: left;
+            font-weight: 600;
+            transition: color var(--transition-time) ease;
+        }
+
+        .night-mode p {
+            color: var(--text-dark);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: left;
+            font-size: 1.3rem;
+            transition: color var(--transition-time) ease;
+        }
+
+        
+
+        footer {
+            width: 100%;
+            margin-bottom: 0;
+            background-color: var(--card-bg-light);
+            color: var (--text-light);
+            padding: 1.2rem 0;
+            transition: background-color var (--transition-time) ease, color var (--transition-time) ease;
+        }
+
+        .night-mode footer {
+            background-color: var (--card-bg-dark);
+            color: var (--text-dark);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3 5rem;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        footer div {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        footer a {
+            color: var (--primary-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color var (--transition-time) ease;
+        }
+
+        .night-mode footer a {
+            color: var (--primary-color);
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            footer nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        .night-mode h2 {
+            color: var(--secondary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        form, p, h2 {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                width: 100%;
+                margin: 1rem 0;
+            }
+        }
+
+        #night-mode-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #night-mode-toggle:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .night-mode #night-mode-toggle {
+            border-color: var(--text-dark);
+            color: var(--text-dark);
+        }
+
+        .night-mode #night-mode-toggle:hover {
+            background-color: var(--text-dark);
+            color: var(--background-dark);
+        }
+    </style>
 </head>
 <body>
-    <form action="../seeker_profile" method="get">
-        <h2><i class="fa-solid fa-user" style="color: #007bff;"></i> Decide how the recruiters see you</h2>
-        <div class="abc">
-            <button type="submit">
-                <i class="fa-solid fa-user" style="color: #007bff; font-size: 24px;"></i> Profile
-            </button>
+    
+    <main class="contain">
+        <form action="../seeker_profile" method="get">
+            <h2><i class="fa-solid fa-user" style="color: #007bff;"></i> Decide how the recruiters see you</h2>
+            <div class="abc">
+                <button type="submit">
+                    <i class="fa-solid fa-user" style="color: #ffffff; font-size: 18px;"></i> Profile
+                </button>
+            </div>
+        </form>
+
+        <form action="../find_jobs" method="post">
+            <h2><i class="fa-solid fa-search" style="color: #007bff;"></i> Find Jobs</h2>
+            <label for="job-search">Search jobs by title:</label>
+            <input type="text" id="job-search" placeholder="Search jobs by title" name="name" required>
+            <input type="submit" value='Search'>
+        </form>
+
+        <form action="../resume_upload" method="post" enctype="multipart/form-data"  accept="application/pdf">
+            <h2><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your resume</h2>
+            <label for="resume-upload">Upload Resume:</label>
+            <input type="file" id="resume-upload" name="image_res" accept=".pdf,.doc,.docx" required>
+            <input type="submit" value='Post'>
+        </form>
+
+        <form action="../cover_letter_upload" method="post" enctype="multipart/form-data"  accept="application/pdf">
+            <h2><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your cover letter</h2>
+            <label for="cover-letter-upload">Upload Cover Letter:</label>
+            <input type="file" id="cover-letter-upload" name="image_cov" accept=".pdf,.doc,.docx" required>
+            <input type="submit" value='Post'>
+        </form>
+        
+    </main>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Job Search Platform. All rights reserved.</p>
+            <div>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
         </div>
-    </form>
-    <form action="../find_jobs" method="post">
-        <label for="job-search">Search jobs by title:</label>
-        <input type="text" id="job-search" placeholder="Search jobs by title" name="name" required>
-        <input type="submit" value='Search'>
-    </form>
-    <p><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your resume</p> 
-    <form action="../resume_upload" method="post" enctype="multipart/form-data">
-        <label for="resume-upload">Upload Resume:</label>
-        <input type="file" id="resume-upload" name="image_res" accept=".pdf,.doc,.docx" required>
-        <input type="submit" value='Post'>
-    </form>
-    <p><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your cover letter</p> 
-    <form action="../cover_letter_upload" method="post" enctype="multipart/form-data">
-        <label for="cover-letter-upload">Upload Cover Letter:</label>
-        <input type="file" id="cover-letter-upload" name="image_cov" accept=".pdf,.doc,.docx" required>
-        <input type="submit" value='Post'>
-    </form>
+    </footer>
+    <script>
+        const nightModeToggle = document.getElementById('night-mode-toggle');
+        const body = document.body;
+
+        nightModeToggle.addEventListener('click', () => {
+            body.classList.toggle('night-mode');
+        });
+    </script>
 </body>
 </html>
 
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
-body {
-    background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-}
-form {
-    background-color: #ffffff;
-    padding: 25px;
-    margin: 15px 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 500px;
-    transition: transform 0.3s ease;
-}
-form:hover {
-    transform: translateY(-5px);
-}
-form label {
-    width: 100%;
-    text-align: left;
-    margin-bottom: 5px;
-    font-size: 1em;
-    color: #333;
-}
-form input[type="text"],
-form input[type="file"] {
-    width: calc(100% - 20px);
-    padding: 12px 10px;
-    margin: 10px 0;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    font-size: 1em;
-    transition: border-color 0.3s ease;
-}
-form input[type="text"]:focus,
-form input[type="file"]:focus {
-    outline: none;
-    border-color: #007bff;
-}
-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 1.1em;
-    color: #333;
-    transition: color 0.3s ease;
-}
-button:hover {
-    color: #007bff;
-}
-button i {
-    margin-right: 10px;
-}
-form input[type="submit"] {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    padding: 12px 24px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1em;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    margin-top: 15px;
-    font-weight: bold;
-}
-form input[type="submit"]:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-form input[type="submit"]:active {
-    transform: translateY(0);
-}
-p {
-    font-size: 1.2em;
-    color: #333333;
-    margin: 25px 0 10px;
-    text-align: center;
-    font-weight: bold;
-}
-.abc {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-}
-h2 {
-    color: #007bff;
-    margin-bottom: 15px;
-    text-align: center;
-}
-@media (max-width: 600px) {
-    form {
-        width: 95%;
-        padding: 20px;
-    }
-}
 
-</style>
+
+
