@@ -3,12 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerConnect</title>
+    <title>CareerConnect - Client Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .resume-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        embed {
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-    <body>
-        <h2>Resume of the clients</h2>
-        <embed src='../images/1718753406317.pdf' width="100%" height="600px" type="application/pdf">
-            <br></body>
+    <header>
+        <h1>CareerConnect</h1>
+    </header>
+    <div class="container">
+        <h2>Resume of the Client</h2>
+        <div class="resume-container">
+            <embed src='../images/1718753406317.pdf' width="100%" height="600px" type="application/pdf">
+        </div>
+    </div>
 </body>
 </html>
