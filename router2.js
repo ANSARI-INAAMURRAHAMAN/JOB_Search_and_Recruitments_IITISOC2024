@@ -23,7 +23,7 @@ let loginHtml = '',loginHtml9='',loginHtml10='', loginHtml7='',loginHtml8='';
 //to make the reading synchronous
 const readHtmlFiles = async () => {
 
-    loginHtml8 = await readFile('./public/chatwith.html', 'utf-8');
+    loginHtml8 = await readFile('./public/html8.html', 'utf-8');
     loginHtml9 = await readFile('./public/job_findings.html', 'utf-8');
     loginHtml10 = await readFile('./public/show_all_hp.html', 'utf-8');
 };
@@ -47,29 +47,45 @@ if(err){
 router.get('/showall_joblistings', (req, response) => {
     let all_jobs=''
     let sql="SELECT* FROM job_listings"
+    let skills=[]
     db.query(sql,(err,res)=>{
-        if(err){console.log(err);res.send('Error')}
+        if(err){console.log(err);
+            res.send('Error')}
         else{
-            res.forEach(e=>{
-                all_jobs=all_jobs+`${loginHtml10}<br><div class="container"><h3 style=' color: #007bff;margin: 5px 0;'>${e.job_name}</h3>
-                <div class="logo">
-                <h5 style=color: #555555;'>Employer:-</h5><p style='font-size: 10px;
-                margin: 5px 0;font-size: 16px;color: #333333;'>${e.Employer}</p>
-                </div><p style="font-size:12px;">Employer Description</p><p>${e.description}</p><br></div><br>`
-            })
-            response.send(`<header style="width: 100%; background-color: #f8f9fa; padding: 10px 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; z-index: 1000;">
-            <a href="../" style="color: #006699; text-decoration: none; display: flex; align-items: center;">
-              <i class="fas fa-briefcase" style="margin-right: 8px; font-size: 24px;"></i>
-              <h1 style="font-family: Arial, sans-serif; font-size: 24px; margin: 0; color: #006699;">CareerConnect</h1>
-            </a>
-            <h3 class="section-title" style="font-family: Arial, sans-serif; font-size: 20px; color: #333; margin: 0;">Some of the latest job news and openings</h3>
-          </header>
-          <br><br>
-          `+all_jobs)
+            const jobListings = res.map(job => `
+            <article class="job" data-aos="fade-up"  onclick="showDetails(event, this)">
+                <header>
+                    <h3>${job.job_name}</h3>
+                    <div class="company">
+                        <img src="${job.Source}" alt="${job.Employer} logo">
+                        <span>${job.Employer}</span>
+                    </div>
+                </header>
+                <div class="job-details">
+                    <p class="location"><i class="fas fa-map-marker-alt"></i> ${job.Location}</p>
+                    <p class="description">${job.description}</p>
+                    <div class="skills">
+                        ${job.requirements.split(',').map(skill => `<span>${skill.trim()}</span>`).join('')}
+                    </div>
+                    <footer class="meta-info">
+                        <p><i class="fas fa-clock"></i> Posted on ${new Date(job.reg_date).toLocaleDateString()}</p>
+                        <p><i class="fas fa-briefcase"></i> ${job.employment_type}</p>
+                    </footer>
+                </div>
+                form action="../apply_jobs?job_name=${job.job_name}&employer=${job.Employer}" method="post" >
+                    <input type="submit" value="Apply Now" class="apply-btn">
+           </form>
+            </article>
+        `).join('');
+
+        const updatedHtml = loginHtml10.replace('{{JOB_LISTINGS}}', `
+            <section class="job-listing">
+                ${jobListings}
+            </section>
+        `);
+        response.send(updatedHtml);
         }})
 });
-
-// Add other routes here
 
 module.exports = router;
 
