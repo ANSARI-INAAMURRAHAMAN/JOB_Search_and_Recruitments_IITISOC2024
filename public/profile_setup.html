@@ -3,164 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setup Profile</title>
-    <body>
-        <form action="../setup_profile" method="post">
-            <label for="desc">Give a short about yourself:</label>
-            <textarea id="desc" placeholder="Brief description about yourself" name="desc" required></textarea>
-    
-            <div class="dropdown">
-                <button type="button" onclick="toggleDropdown()">Select Skills</button>
-                <div class="dropdown-content">
-                    <label><input type="checkbox" id="skills" name="skills" value="php"> PHP</label>
-                    <label><input type="checkbox" id="skills" name="skills" value="js"> JavaScript</label>
-                    <label><input type="checkbox" id="skills" name="skills" value="c++"> C++</label>
-                    <label><input type="checkbox" id="skills" name="skills" value="python"> Python</label>
-                    <label><input type="checkbox" id="skills" name="skills" value="java"> Java</label>
-                </div>
-            </div>
-    
-            <input type="submit" value="Post">
-        </form></body></html>
+    <title>Setup Profile - CareerConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 2em;
+            font-weight: 600;
+            display: flex;
             justify-content: center;
-            height: 100vh;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        header a i {
+            margin-right: 10px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         form {
-            background-color: #ffffff;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 300px;
         }
 
-        form label {
+        label {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        textarea, input[type="text"] {
             width: 100%;
-            text-align: left;
-            margin: 10px 0 5px;
-            font-size: 1em;
-            color: #333;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
-        form textarea {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #cccccc;
-            border-radius: 5px;
-            font-size: 1em;
-            resize: vertical; /* Allow vertical resizing of textarea */
-            transition: border-color 0.3s ease;
-        }
-
-        form textarea:focus,
-        form input[type="text"]:focus {
+        textarea:focus, input[type="text"]:focus {
             outline: none;
-            border-color: #007bff;
+            border-color: #2193b0;
+            box-shadow: 0 0 10px rgba(33, 147, 176, 0.3);
         }
 
         .dropdown {
             position: relative;
-            display: inline-block;
-            margin-bottom: 10px; /* Add space between textarea and dropdown */
+            margin-top: 20px;
         }
 
-        .dropdown button {
-            background-color: #007bff;
-            color: #ffffff;
+        .dropdown-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2193b0;
+            color: white;
             border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1em;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            font-size: 16px;
         }
 
-        .dropdown button:hover {
-            background-color: #0056b3;
+        .dropdown-btn:hover {
+            background-color: #1c7d98;
         }
 
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            background-color: #fff;
+            min-width: 100%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             z-index: 1;
-            border-radius: 5px;
-            padding: 8px 0;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .dropdown-content label {
             display: block;
-            padding: 8px 16px;
+            padding: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s ease;
         }
 
         .dropdown-content label:hover {
             background-color: #f1f1f1;
         }
 
-        .dropdown.show .dropdown-content {
-            display: block;
-        }
-
-        form input[type="submit"] {
-            background-color: #007bff;
-            color: #ffffff;
+        input[type="submit"] {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #2193b0;
+            color: white;
             border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1em;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
+            font-size: 18px;
+            transition: all 0.3s ease;
         }
 
-        form input[type="submit"]:hover {
-            background-color: #0056b3;
+        input[type="submit"]:hover {
+            background-color: #1c7d98;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
-
+<body>
+    <header>
+        <a href="../"><i class="fas fa-briefcase"></i> CareerConnect</a>
+    </header>
+    <div class="container">
+        <h1>Setup Profile</h1>
+        <form action="../setup_profile" method="post">
+            <label for="desc">About Yourself:</label>
+            <textarea id="desc" placeholder="Brief description about yourself" name="desc" required></textarea>
+            
+            <label for="role">Preferred Role:</label>
+            <input type="text" id="role" placeholder="Enter your role" name="role" required />
+            
+            <div class="dropdown">
+                <button type="button" class="dropdown-btn" onclick="toggleDropdown('skills')">Select Skills</button>
+                <div id="skills-dropdown" class="dropdown-content">
+                    <label><input type="checkbox" name="skills" value="php"> PHP</label>
+                    <label><input type="checkbox" name="skills" value="js"> JavaScript</label>
+                    <label><input type="checkbox" name="skills" value="c++"> C++</label>
+                    <label><input type="checkbox" name="skills" value="python"> Python</label>
+                    <label><input type="checkbox" name="skills" value="java"> Java</label>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button type="button" class="dropdown-btn" onclick="toggleDropdown('location')">Select Location</button>
+                <div id="location-dropdown" class="dropdown-content">
+                    <label><input type="radio" name="location" value="Mumbai"> Mumbai</label>
+                    <label><input type="radio" name="location" value="Delhi"> Delhi</label>
+                    <label><input type="radio" name="location" value="Hyderabad"> Hyderabad</label>
+                    <label><input type="radio" name="location" value="Bangalore"> Bangalore</label>
+                </div>
+            </div>
+    
+            <input type="submit" value="Create Profile">
+        </form>
+    </div>
 
     <script>
-        function toggleDropdown() {
-            document.querySelector('.dropdown').classList.toggle('show');
+        function toggleDropdown(id) {
+            document.getElementById(id + '-dropdown').style.display = 
+                document.getElementById(id + '-dropdown').style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
-            if (!event.target.matches('.dropdown button')) {
+            if (!event.target.matches('.dropdown-btn')) {
                 var dropdowns = document.getElementsByClassName("dropdown-content");
                 for (var i = 0; i < dropdowns.length; i++) {
                     var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
+                    if (openDropdown.style.display === 'block') {
+                        openDropdown.style.display = 'none';
                     }
                 }
             }
         }
     </script>
-
-
+</body>
+</html>
