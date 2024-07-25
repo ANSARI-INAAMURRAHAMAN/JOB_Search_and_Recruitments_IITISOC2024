@@ -1,16 +1,22 @@
 const express = require('express');const path=require('path');
+
 const app = express();
 app.use(express.static('public'));
 const mysql=require('mysql');
 const router = require('./router'); 
 const router3 = require('./router3.js');
-const{sendFile}=require('fs')
 const { readFile } = require('fs').promises;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 const http=require('http')
-const bcrypt = require('bcrypt');
+/*
 const socketio=require('socket.io')
+const server=http.createServer();
+const io=socketio(server);
+io.on('connection',()=>{
+    console.log('Socket connected');
+})
+*/
 //to create a socket server
 app.set("view engine","ejs")
 const session=require('express-session')
@@ -43,7 +49,7 @@ db.connect((err)=>{
         console.log('Connection Established!')
     }})
 //Reading login and signup files
-let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='';
+let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='',chat='';
 let loginHtml1 = '', loginHtml2 = '', loginHtml3 = '', loginHtml4 = '', loginHtml5 = '', loginHtml6 = '', loginHtml7='',loginHtml8='';
 //to make the reading synchronous
 const readHtmlFiles = async () => {
@@ -59,10 +65,10 @@ const readHtmlFiles = async () => {
     loginHtml9 = await readFile('./public/job_findings.html', 'utf-8');
     loginHtml10 = await readFile('./public/show_all_hp.html', 'utf-8');
     loginHtml11 = await readFile('./public/applyerror.html','utf-8')
+    chat=await readFile('./public/chat.html','utf-8');
 };
 
-let username_seeker=''
-let username_recruiter=''
+let username_seeker='';let username_recruiter='';
 
 readHtmlFiles();
 const router2 = require('./router2'); //general home page
@@ -78,72 +84,125 @@ app.get('/signup_seeker',(req,res)=>{
 app.get('/signup_recruiter',(req,res)=>{
     res.send(loginHtml3)
 })
-//login functions only set up as modules in login.js
-//dashboards and other page
 
 app.use('/', router2);
 
 app.use('/',router3)
-
+let job_name=''
 app.post('/find_jobs', authenticateSeeker,async(req,response)=>{
     let jobs_found=''
     const name=req.body.name;
-    const filter=req.body.skills;
-    let sql=`SELECT* FROM job_listings WHERE job_name LIKE '${name}%'`//AND LIKE '${filter}%'
+    console.log(name)
+    let sql=`SELECT* FROM job_listings WHERE job_name LIKE '${name}%'`
     db.query(sql,(err,res)=>{
         if(err){
             console.log(err)
             return response.send('Error')
         }
         if(res.length>0){
-            res.forEach(e=>{
-                jobs_found=jobs_found+`<div class="job" data-aos="fade-up">
-                <h3 id="name">${e.job_name}</h3>
-                <div class="company">
-                    <img src="${e.Source}" alt="Company Logo">
-                    <p>${e.Employer}</p></div>
-                <div class="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <p>${e.Location}</p> </div>
-                <p>${e.description}.</p>
-                <div class="skills">
-                        <span>${e.requirements}</span>
+            job_name=res[0].job_name;
+            const jobListings = res.map(job => `
+                <article class="job" data-aos="fade-up"  onclick="showDetails(event, this)">
+                    <header>
+                        <h3>${job.job_name}</h3>
+                        <div class="company">
+                            <img src="${job.Source}" alt="${job.Employer} logo">
+                            <span>${job.Employer}</span>
+                        </div>
+                    </header>
+                    <div class="job-details">
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> ${job.Location}</p>
+                        <p class="description">${job.description}</p>
+                        <div class="skills">
+                            ${job.requirements.split(',').map(skill => `<span>${skill.trim()}</span>`).join('')}
+                        </div>
+                        <footer class="meta-info">
+                            <p><i class="fas fa-clock"></i> Posted on ${new Date(job.reg_date).toLocaleDateString()}</p>
+                            <p><i class="fas fa-briefcase"></i> ${job.employment_type}</p>
+                        </footer>
                     </div>
-                     <p style="margin-bottom: 10px;"><strong>Apply here</strong></p>
-                     <form action="../apply_jobs?job_name=${e.job_name}&employer=${e.Employer}" method="post" style="margin-top: 10px;">
-                     <input type="submit" value="Apply Now" style="background-color: #007bff; color: white; border: none;
-                     padding: 10px 20px; cursor: pointer; border-radius: 4px;">
-            </form>
-            <p>By applying your resume and cover letter will be automatically sent</p>
-                 </div></div><br>`
-            })
-            response.send(  `${loginHtml9}`+`<div class="job-listing">
-            ${jobs_found}
-            </div>`)
+                    <form action="../apply_jobs?job_name=${job.job_name}&employer=${job.Employer}" method="post" >
+                    <input type="submit" value="Apply Now" class="apply-btn">
+           </form>
+           <p>After applying your resume and cover letter will be automatically sent</p>
+                </article>
+            `).join('');
+
+            const updatedHtml = loginHtml9.replace('{{JOB_LISTINGS}}',`
+                <section class="job-listing">
+                    ${jobListings}
+                </section>
+            `);
+            response.send(updatedHtml);
         }
     else{
         response.send('No jobs found!')
     }}) ; 
 });
+app.post('/filter',authenticateSeeker,(req,response)=>{
+    let jobs_found=''
+    const location=req.body.job_location
+    const employment_type=req.body.employment_type
+    let sql=`SELECT* FROM job_listings WHERE job_name ='${job_name}'
+    AND Location= '${location}' AND employment_type='${employment_type}'`;
+    db.query(sql,(err,res)=>{
+        if(err){
+            console.log(err)
+        }
+        if(res.length>0){
+            const jobListings = res.map(job => `
+                <article class="job" data-aos="fade-up"  onclick="showDetails(event, this)">
+                    <header>
+                        <h3>${job.job_name}</h3>
+                        <div class="company">
+                            <img src="${job.Source}" alt="${job.Employer} logo">
+                            <span>${job.Employer}</span>
+                        </div>
+                    </header>
+                    <div class="job-details">
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> ${job.Location}</p>
+                        <p class="description">${job.description}</p>
+                        <div class="skills">
+                            ${job.requirements.split(',').map(skill => `<span>${skill.trim()}</span>`).join('')}
+                        </div>
+                        <footer class="meta-info">
+                            <p><i class="fas fa-clock"></i> Posted on ${new Date(job.reg_date).toLocaleDateString()}</p>
+                            <p><i class="fas fa-briefcase"></i> ${job.employment_type}</p>
+                        </footer>
+                    </div>
+                    <form action="../apply_jobs?job_name=${job.job_name}&employer=${job.Employer}" method="post" >
+                    <input type="submit" value="Apply Now" class="apply-btn">
+           </form>
+           <p>After applying your resume and cover letter will be automatically sent</p>
+                </article>
+            `).join('');
 
+            const updatedHtml = loginHtml9.replace('{{JOB_LISTINGS}}', `
+                <section class="job-listing">
+                    ${jobListings}
+                </section>
+            `);
+            response.send(updatedHtml);
+        }
+        else{
+            response.send('No jobs found!')
+        }
+    })  
+})
 
 app.post('/apply_jobs', authenticateSeeker,(req,response)=>{
-    //console.log(req.query)
     let abcd=''
     let search=`SELECT *FROM job_listings WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}'`
     db.query(search,(err,res)=>{
         if(err){console.log(err)
         }
-        else{
+        else if(res.length>0){
             abcd=res[0].Applicants;
-            console.log(res[0].Applicants)
             const str = abcd;
             const searchTerm = req.session.seekerUsername;
-
             if (str.indexOf(searchTerm) !== -1) {
                 response.send('Already applied')
             } 
-            
             else if(abcd===''){
             let sql=`UPDATE job_listings SET Applicants =  '${req.session.seekerUsername}'
                 WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}' ;`
@@ -151,7 +210,7 @@ app.post('/apply_jobs', authenticateSeeker,(req,response)=>{
             db.query(sql,(err,res)=>{
                     if(err){console.log(err)
                     }
-                    else{response.send('Job application Posted!')
+                    else{response.send(`<h2 style="text-align:center;">Job application Posted!</h2>`)
                     }
                 })
             }
@@ -160,13 +219,15 @@ app.post('/apply_jobs', authenticateSeeker,(req,response)=>{
                 if(abcd.length===0){
                     updated=req.session.seekerUsername
                 }
+                else{
                 updated=abcd+','+req.session.seekerUsername
+                }
                 let sql_updated=`UPDATE job_listings SET Applicants =  '${updated}'
                 WHERE employer ='${req.query.employer}' AND job_name='${req.query.job_name}' ;`
                 db.query(sql_updated,(err,res)=>{
                     if(err){console.log(err)}
                     else{
-                        response.send('Job application Posted!');
+                        response.send(`<h2 style="text-align:center;">Job application Posted!</h2>`);
                     }
                 })
             }}
@@ -175,38 +236,77 @@ app.post('/apply_jobs', authenticateSeeker,(req,response)=>{
 
 
 let applicant_list=''
-app.get('/see_applicants_jobs', authenticateRecruiter,(req,response)=>{
-   let sql=`SELECT Applicants FROM job_listings WHERE employer='${req.session.recruiterUsername}'`
-   let sqlnew=`SELECT job_name,Applicants FROM job_listings WHERE employer='${req.session.recruiterUsername}'`
-   /*let job_name=''
-   db.query(sqlnew,(err,res)=>{
-    if(err){console.log(err)}
-    else{
-        //console.log(res)
-        const pos = res.filter(row => console.log(row));
-    }
-   })
-   */
-   db.query(sqlnew,(err,res)=>{
-    if(err){
-        console.log(err)
-    }
-    if(res.length===0){
-        response.send('No Applicants')
-    }
-    else{
-        let html=''
-        console.log(res)
-        applicant_list=res[0].Applicants.split(',')
-        let arr=[]
-        
-        for(let i=0;i<res.length;i++){
-            res.forEach(e=>{
-                console.log(e)
-            })
+app.get('/see_applicants_jobs', authenticateRecruiter, (req, response) => {
+    let sqlnew = `SELECT job_name, Applicants FROM job_listings WHERE employer='${req.session.recruiterUsername}'`;
+    db.query(sqlnew, (err, res) => {
+
+        if (err) {
+            console.log(err);
+            return response.status(500).send('An error occurred');
         }
-       res.forEach(e=>{
-       console.log(e.Applicants+e.job_name)
+
+        if (res.length === 0) {
+            return response.send('<main><p>No Applicants</p></main>');
+        }
+
+        let html = '';
+        res.forEach(job => {
+            const applicants = job.Applicants.split(',').filter(a => a.trim() !== '');
+            html += `
+                <div class="role">
+                    <h2>Applicants for ${job.job_name}</h2>
+                    <div class="applicants-container">
+            `;
+
+            applicants.forEach(applicant => {
+                html += `
+                    <div class="applicant-card">
+                        <h3>${applicant}</h3>
+                        <p>View the profile of this applicant</p>
+                        <form action="../see_profile/${applicant}" method="get">
+                            <button type="submit" class="btn">See Profile</button>
+                        </form>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+        });
+
+        response.send(loginHtml7.replace('<!-- Your dynamic content will be inserted here -->', html));
+    });
+});
+app.post('/message/:Name',(req,response)=>{
+    let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
+    db.query(sql,(err,res)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            response.send(`${chat}`)
+        }
+    })
+})
+
+app.post('/send_msg',(req,response)=>{
+    response.send('Working')
+})
+
+
+const routerUpload = require('./router_upload'); // Adjust the path as needed
+app.use('/', routerUpload);
+
+const router4=require('./router4.js')
+app.use('/',router4)
+
+app.listen(5000)
+
+
+
+/*res.forEach(e=>{
        html= html+ `<body >
        <h1>For the role of${e.job_name}</h1>
         <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd;
@@ -221,18 +321,4 @@ app.get('/see_applicants_jobs', authenticateRecruiter,(req,response)=>{
     </div>
         ${loginHtml7}`+`<br>`
        })
-       
-        response.send(html)
-    }
-   })
-});
-/*
- response.send()
-*/
-const routerUpload = require('./router_upload'); // Adjust the path as needed
-app.use('/', routerUpload);
-
-const router4=require('./router4.js')
-app.use('/',router4)
-
-app.listen(5000)
+       */
