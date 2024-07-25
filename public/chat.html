@@ -1,45 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chatbot</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.0/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.0/moment.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-to-One Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.12.1/qs.min.js" integrity="sha512-vuLOE4Fh9lfxaN9n81Vl1HwrqMYz9WKoNmsHNC7Hz7OWX4k4O7FjCyQ1tQ82RJExao+Fas40RLiS5PCfVRGgnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #075e54;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.chat-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    line-height: 1.4;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+}
+
+.received {
+    align-self: flex-start;
+    background-color: #fff;
+}
+
+.input-area {
+    display: flex;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.input-area form {
+    display: flex;
+    width: 100%;
+}
+
+#message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+#send-button {
+    background-color: #075e54;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+</style>
 <body>
-    <div id="chat-container">
-        <ul id="messages"></ul>
-        <form id="chat-form">
-            <input id="message-input" autocomplete="off" />
-            <button type="submit">Send</button>
-        </form>
+    <header>
+        <h1><i class="fas fa-briefcase" style="margin-right: 8px;"></i>CareerConnect</h1>
+    </header>
+    <div class="chat-container">
+        <div class="chat-messages">
+            <div class="message received">Hello! How are you?</div>
+            <div class="message sent">Hi there! I'm doing well, thanks for asking. How about you?</div>
+            <div class="message received">I'm great, thanks! What are your plans for the weekend?</div>
+        </div>
+        <div class="input-area">
+            <form class="chat-form" action="../send_msg" method="post">
+                <input type="text" class="msg" id="message-input" placeholder="Type a message..." >
+                <input type="submit" value="Send" id="send-button">Send</button></form>
+        </div>
     </div>
-
-    <script>
-        // Connect to the server using Socket.IO
-        const socket = io();
-
-        // Get references to the HTML elements
-        const messagesList = document.getElementById('messages');
-        const chatForm = document.getElementById('chat-form');
-        const messageInput = document.getElementById('message-input');
-
-        // Handle form submission
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const message = messageInput.value.trim();
-            if (message) {
-                // Emit the message to the server
-                socket.emit('chatMessage', message);
-                messageInput.value = '';
-            }
-        });
-
-        // Handle incoming messages
-        socket.on('chatMessage', (message) => {
-            const li = document.createElement('li');
-            li.innerText = `${moment().format('HH:mm:ss')} - ${message}`;
-            messagesList.appendChild(li);
-        });
-    </script>
 </body>
 </html>
+<script >
+    const socket=io();
+document.addEventListener('DOMContentLoaded', function() {
+    socket.on('show',msg=>{
+        console.log(msg)
+        let msg_cont=document.createElement('div');
+    msg_cont.className='sent'
+    msg_cont.textContent=msg.Message+`   `+msg.Username;
+    let chat_cont=document.querySelector('.chat-messages')
+    chat_cont.appendChild(msg_cont)
+    chat_cont.scrollTop=chat_cont.scrollTop
+    })
+})
+document.querySelector('.chat-form').addEventListener('submit',(e)=>{
+    const msg=document.querySelector(".msg").value;
+    socket.emit('join',msg)
+    e.preventDefault();
+})
+
+socket.on('send',msg=>{
+    console.log(msg)
+    let msg_cont=document.createElement('div');
+    msg_cont.className='sent'
+    msg_cont.textContent=msg.message+`   `+msg.username;
+    let chat_cont=document.querySelector('.chat-messages')
+    chat_cont.appendChild(msg_cont)
+    chat_cont.scrollTop=chat_cont.scrollTop
+})
+
+document.querySelector('.chat-form').addEventListener('submit',(e)=>{
+    document.querySelector('.msg').value=''
+})
+
+
+
+</script>
