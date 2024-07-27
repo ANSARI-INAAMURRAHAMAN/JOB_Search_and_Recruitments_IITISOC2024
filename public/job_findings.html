@@ -430,57 +430,7 @@ main {
 });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.querySelector('input[type="text"]');
-            const locationFilter = document.querySelector('select');
-            const jobs = document.querySelectorAll('.job');
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.overlay');
-            const closeSidebarBtn = document.querySelector('.close-sidebar');
-    
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-    
         
-    
-            function showDetails(event, job) {
-                event.preventDefault();
-                const sidebarContent = sidebar.querySelector('.sidebar-content');
-                sidebarContent.innerHTML = `
-                    <h2>${job.querySelector('h3').textContent}</h2>
-                    <p><strong>Company:</strong> ${job.querySelector('.company span').textContent}</p>
-                    <p><strong>Location:</strong> ${job.querySelector('.location').textContent}</p>
-                    <p><strong>Description:</strong> ${job.querySelector('.description').textContent}</p>
-                    <p><strong>Skills:</strong> ${job.querySelector('.skills').textContent}</p>
-                    <p><strong>Posted:</strong> ${job.querySelector('.meta-info p:first-child').textContent}</p>
-                    <p><strong>Job Type:</strong> ${job.querySelector('.meta-info p:last-child').textContent}</p>
-                    <button class="apply-btn">Apply Now</button>
-                `;
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-            }
-    
-            function closeSidebar() {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            }
-    
-            closeSidebarBtn.addEventListener('click', closeSidebar);
-            overlay.addEventListener('click', closeSidebar);
-    
-            jobs.forEach(job => {
-                job.addEventListener('click', (event) => showDetails(event, job));
-            });
-        });
     </script>
     
 </body>
