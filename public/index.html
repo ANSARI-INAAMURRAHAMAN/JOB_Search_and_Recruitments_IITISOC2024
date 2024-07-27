@@ -12,19 +12,22 @@
 <script src="https://kit.fontawesome.com/9aaf454385.js" crossorigin="anonymous"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
+  <header><a href="../" style="color:#006699; text-decoration:none; display: flex; align-items: center;">
+    <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
+    <h1 style="font-family: Arial, sans-serif; font-size: 36px; margin: 0;">CareerConnect</h1>
+  </a>
+    <div class="input-group rounded">
+    <form class="form" action="../find_jobs" method="post">
+      <input type="text" name="name" class="form-control rounded" placeholder="Search"  />
+       <input type="submit" value=''/><span class="sp"><i class="fas fa-search"></i></span>
+    </form>
+    </div>
+    <a href="../showall_joblistings">Get the latest job news</a>
+    <button id="night-mode-toggle" aria-label="Toggle night mode">
+      <i class="fas fa-moon"></i>
+    </button>
+  </header><br><br><br>
   <body>
-    <header><a href="../" style="color:#006699; text-decoration:none; display: flex; align-items: center;">
-      <i class="fas fa-briefcase" style="margin-right: 8px;"></i>
-      <h1 style="font-family: Arial, sans-serif; font-size: 36px; margin: 0;">CareerConnect</h1>
-    </a>
-      <div class="input-group rounded">
-      <form class="form" action="../find_jobs" method="post">
-        <input type="text" name="name" class="form-control rounded" placeholder="Search"  />
-         <input type="submit" value=''/><span class="sp"><i class="fas fa-search"></i></span>
-      </form>
-      </div>
-      <a href="../showall_joblistings">Get the latest job news</a>
-    </header><br>
     <h2>Find Your Dream Job!</h2><br>
   <div class="cta-buttons">
     <a href="../login_seeker"><button>Get Hired!</button></a>
@@ -64,7 +67,7 @@
   </div>
   
   </body>
-  <section id="contact">
+  <footer id="contact">
     <h1 class="section_heading mb50px">
         <span>
             <i class="far fa-address-card"></i>
@@ -78,7 +81,7 @@
                 <input id="input-name" name="username" type="text" placeholder="Your Name">
                 <input id="input-email" name="input_email" type="text" required placeholder="Your Email">
                 <textarea id="input-message" name="input_message" rows="2" cols=40 placeholder="Message"></textarea>
-                <button class="sub-btn" type="submit">SEND MESSAGE</button>
+                <input class="sub-btn" type="submit" value="SEND BUTTON">
             </form>
         </div>
         <div id="my-details-container">
@@ -102,33 +105,13 @@
 
     <div class="text-center social-icon">
 
-        <ul class="horizontal-list">
-
-            <li>
-                <a href="https://www.linkedin.com/in/inaam-ansari-a90628271/">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-            </li>
-            <li>
-                <a href="https://codeforces.com/profile/inaamansari">
-                    <i class="fa-solid fa-code-compare"></i>
-                </a>
-            </li>
-            <li>
-                <a href="https://twitter.com/InaamAn79778325"> <i class="fa-brands fa-twitter"></i> </a>
-            </li>
-            <li>
-                <a href="#"><i class="fa-brands fa-instagram"></i>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.quora.com/profile/Inaam-Ansari-11/answers">
-                    <i class="fab fa-quora"></i>
-                </a>
-            </li>
-        </ul>
     </div>
-</section>
+    <button id="back-to-top" aria-label="Back to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    
+  </footer>
+  
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
 <script src="index.js">
