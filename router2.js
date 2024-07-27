@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const bcrypt = require('bcrypt');
 const { readFile } = require('fs').promises;
 router.use(express.json());
 router.use(express.urlencoded({extended:false}));
@@ -18,8 +17,9 @@ db.connect((err)=>{
     else{
         console.log('router2.js Connection Established!')
     }})
+    
 //Reading login and signup files
-let loginHtml = '',loginHtml9='',loginHtml10='', loginHtml7='',loginHtml8='';
+let loginHtml9='',loginHtml10='', loginHtml8='';
 //to make the reading synchronous
 const readHtmlFiles = async () => {
 
@@ -28,7 +28,8 @@ const readHtmlFiles = async () => {
     loginHtml10 = await readFile('./public/show_all_hp.html', 'utf-8');
 };
 readHtmlFiles();
-router.get('/queries', (req, response) => {
+
+router.post('/queries', (req, response) => {
     const username=req.body.username
     const mail=req.body.input_email
     const msg=req.body.input_message
@@ -38,14 +39,13 @@ router.get('/queries', (req, response) => {
 if(err){
     console.log(err)
 }   
-    else{
-        response.send("Your Query Posted "+`<br>Now go back`)
+else{
+    response.send("Your Query Posted "+`<br>Now go back`)
     }
     })
 });
 
 router.get('/showall_joblistings', (req, response) => {
-    let all_jobs=''
     let sql="SELECT* FROM job_listings"
     let skills=[]
     db.query(sql,(err,res)=>{
@@ -72,7 +72,7 @@ router.get('/showall_joblistings', (req, response) => {
                         <p><i class="fas fa-briefcase"></i> ${job.employment_type}</p>
                     </footer>
                 </div>
-                form action="../apply_jobs?job_name=${job.job_name}&employer=${job.Employer}" method="post" >
+                <form action="../apply_jobs?job_name=${job.job_name}&employer=${job.Employer}" method="post" >
                     <input type="submit" value="Apply Now" class="apply-btn">
            </form>
             </article>

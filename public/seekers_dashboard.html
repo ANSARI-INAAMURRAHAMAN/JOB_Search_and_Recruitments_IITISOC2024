@@ -323,17 +323,17 @@ nav .links a:focus {
             <input type="submit" value='Search'>
         </form>
 
-        <form action="../resume_upload" method="post" enctype="multipart/form-data"  accept="application/pdf">
+        <form action="../resume_upload" method="post" enctype="multipart/form-data"  accept="image/jpeg, image/jpg">
             <h2><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your resume</h2>
             <label for="resume-upload">Upload Resume:</label>
-            <input type="file" id="resume-upload" name="image_res" accept=".pdf,.doc,.docx" required>
+            <input type="file" id="resume-upload" name="image_res" accept="image/jpeg, image/jpg" required>
             <input type="submit" value='Post'>
         </form>
 
-        <form action="../cover_letter_upload" method="post" enctype="multipart/form-data"  accept="application/pdf">
+        <form action="../cover_letter_upload" method="post" enctype="multipart/form-data" accept="image/jpeg, image/jpg" >
             <h2><i class="fa-solid fa-file-upload" style="color: #007bff;"></i> Post your cover letter</h2>
             <label for="cover-letter-upload">Upload Cover Letter:</label>
-            <input type="file" id="cover-letter-upload" name="image_cov" accept=".pdf,.doc,.docx" required>
+            <input type="file" id="cover-letter-upload" name="image_cov" accept="image/jpeg, image/jpg" required>
             <input type="submit" value='Post'>
         </form>
         

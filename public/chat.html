@@ -89,56 +89,86 @@ header {
 }
 </style>
 <body>
-    <header>
-        <h1><i class="fas fa-briefcase" style="margin-right: 8px;"></i>CareerConnect</h1>
-    </header>
     <div class="chat-container">
-        <div class="chat-messages">
-            <div class="message received">Hello! How are you?</div>
-            <div class="message sent">Hi there! I'm doing well, thanks for asking. How about you?</div>
-            <div class="message received">I'm great, thanks! What are your plans for the weekend?</div>
+        <header class="chat-header">
+          <h1> ChatConnect</h1>
+          <a href="index.html" class="btn">Leave Room</a>
+        </header>
+        <main class="chat-main">
+          <div class="chat-sidebar">
+            <h4>Active Users :</h4>
+            <ul id="users">
+            </ul>
+          </div>
+          <div class="chat-messages">
+                        <div class="chat-container">
+              </div>
+                        </div>
+          </div>
+        </main>
+        <div class="chat-form-container">
+          <form id="chat-form">
+            <input
+              id="msg"
+              type="text"
+              placeholder="Enter Message"
+              required
+              autocomplete="off">
+            <button class="btn"><i class="fas fa-paper-plane"></i></button>
+          </form>
         </div>
-        <div class="input-area">
-            <form class="chat-form" action="../send_msg" method="post">
-                <input type="text" class="msg" id="message-input" placeholder="Type a message..." >
-                <input type="submit" value="Send" id="send-button">Send</button></form>
-        </div>
-    </div>
-</body>
-</html>
-<script >
-    const socket=io();
-document.addEventListener('DOMContentLoaded', function() {
-    socket.on('show',msg=>{
-        console.log(msg)
-        let msg_cont=document.createElement('div');
-    msg_cont.className='sent'
-    msg_cont.textContent=msg.Message+`   `+msg.Username;
-    let chat_cont=document.querySelector('.chat-messages')
-    chat_cont.appendChild(msg_cont)
-    chat_cont.scrollTop=chat_cont.scrollTop
-    })
-})
-document.querySelector('.chat-form').addEventListener('submit',(e)=>{
-    const msg=document.querySelector(".msg").value;
-    socket.emit('join',msg)
+      </div>
+      </body>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.12.1/qs.min.js" integrity="sha512-vuLOE4Fh9lfxaN9n81Vl1HwrqMYz9WKoNmsHNC7Hz7OWX4k4O7FjCyQ1tQ82RJExao+Fas40RLiS5PCfVRGgnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+const socket=io();
+let data=''
+const {username,room}=Qs.parse(location.search,{
+    ignoreQueryPrefix:true
+});
+
+socket.emit('user-name',username)
+const chatmsg=document.querySelector('.chat-messages')
+document.getElementById('chat-form').addEventListener('submit',(e)=>{
     e.preventDefault();
+    //console.log('event trigger')
+     data=document.getElementById("msg").value
+     socket.emit('ok',data);
+     //Clearing the input
+     document.getElementById("msg").value=''
+     document.getElementById("msg").focus()
+})
+function getUniqueElements(users_all) {
+    return users_all.filter((value, index, self) => self.indexOf(value) === index);
+}
+let i=0;
+const users_all=[]
+socket.on('show-all-users',users=>{
+    users_all.push(...users);
+    const uniqueUsers = getUniqueElements(users_all);
+    const user_list = document.getElementById('users');
+    user_list.innerHTML = uniqueUsers.map(user => `<li>${user}</li>`).join('');
+})
+    
+socket.on('show-msg',msg=>{
+    if(msg.username){
+    document.querySelector('.chat-messages').innerHTML=
+    document.querySelector('.chat-messages').innerHTML+`<div style="display: flex; flex-direction: column; background-color: #4a4a4a; color: #ffffff; padding: 8px; border-radius: 5px; margin: 10px 0; z-index: auto;">
+    <p style="font-size: 9px; margin: 0 0 3px;color: #ffcc00;">${msg.username}</p>
+    <p style="margin: 0 0 3px;font-size: 13px;">${msg.text}</p>
+    <p style="font-size: 8px; margin: 0; text-align: right;">${msg.time}</p></div>`;
+    }
+    chatmsg.scrollTop=chatmsg.scrollHeight;
 })
 
-socket.on('send',msg=>{
-    console.log(msg)
-    let msg_cont=document.createElement('div');
-    msg_cont.className='sent'
-    msg_cont.textContent=msg.message+`   `+msg.username;
-    let chat_cont=document.querySelector('.chat-messages')
-    chat_cont.appendChild(msg_cont)
-    chat_cont.scrollTop=chat_cont.scrollTop
+document.querySelector('.btn').addEventListener('click',()=>{
+    socket.emit('disconnected', `${username} has disconnected!`);
+users_all = users_all.filter(el => el !== username);
 })
-
-document.querySelector('.chat-form').addEventListener('submit',(e)=>{
-    document.querySelector('.msg').value=''
-})
-
-
 
 </script>
+
+

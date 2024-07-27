@@ -1,6 +1,13 @@
 const multer = require('multer');
 const path = require('path');
+const cloudinary = require('cloudinary');
 
+cloudinary.v2.config({
+  cloud_name: 'dq2skbvkx',
+  api_key: '782254474184389',
+  api_secret: 'ZUVW3IIykZM4fa5d6hIuZtU750k',
+  secure: true,
+});
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, path.join(__dirname, 'public/images_resume'))

@@ -1,23 +1,33 @@
 const express = require('express');const path=require('path');
 
+const mysql = require('mysql');
 const app = express();
 app.use(express.static('public'));
-const mysql=require('mysql');
+
 const router = require('./router'); 
 const router3 = require('./router3.js');
 const { readFile } = require('fs').promises;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 const http=require('http')
-/*
+
 const socketio=require('socket.io')
-const server=http.createServer();
-const io=socketio(server);
-io.on('connection',()=>{
-    console.log('Socket connected');
-})
-*/
-//to create a socket server
+
+const server = http.createServer(app);
+const io = socketio(server);
+
+const cloudinary = require('cloudinary');
+
+cloudinary.v2.config({
+  cloud_name: 'dq2skbvkx',
+  api_key: '782254474184389',
+  api_secret: 'YOUR_API_SECRET',
+  secure: true,
+});
+
+
+
+
 app.set("view engine","ejs")
 const session=require('express-session')
 app.use(session({
@@ -36,13 +46,14 @@ app.set("view engine","ejs")
 
 //routes for login
 app.use('/', router);
-const db=mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    database:'recruitment_project'
-})
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'recruitment_project'
+});
 db.connect((err)=>{
     if(err){
+        //console.log(err)
         throw err;
     }
     else{
@@ -277,10 +288,36 @@ app.get('/see_applicants_jobs', authenticateRecruiter, (req, response) => {
         });
 
         response.send(loginHtml7.replace('<!-- Your dynamic content will be inserted here -->', html));
+
     });
 });
-app.post('/message/:Name',(req,response)=>{
-    let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
+app.get('/message_rec/:Name',authenticateRecruiter,(req,response)=>{
+    io.on('connection', (socket) => {
+        let user_name=''
+    const format=require('../utils/messages.js')
+    console.log('connection success')
+    socket.on('user-name',(username)=>{  
+        users_all.push(username);
+        user_name=username;
+    })
+    socket.on('ok',msg=>{
+        console.log(user_name)
+        const uniqueUsers = getUniqueElements(users_all);
+        console.log(uniqueUsers)
+        io.emit('show-all-users',uniqueUsers)
+        io.emit('show-msg',format(user_name,msg))
+    })
+    user_name=''
+    socket.on('disconnected',msg=>{
+        io.emit('show-msg',format('Bot',msg))
+    })
+       /* 
+       socket.on('sendMessage', (message) => {
+          const { from, to, text } = message;
+          io.to(to).emit('message', { from, text });
+        });
+        */
+         let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
     db.query(sql,(err,res)=>{
         if(err){
             console.log(err);
@@ -289,10 +326,39 @@ app.post('/message/:Name',(req,response)=>{
             response.send(`${chat}`)
         }
     })
+        
+});
 })
 
-app.post('/send_msg',(req,response)=>{
-    response.send('Working')
+app.get('/message/:Name',authenticateSeeker,(req,response)=>{
+    io.on('connection', (socket) => {
+        let user_name=''
+    const format=require('../utils/messages.js')
+    console.log('connection success')
+    socket.on('user-name',(username)=>{  
+        users_all.push(username);
+        user_name=username;
+    })
+    socket.on('ok',msg=>{
+        console.log(user_name)
+        const uniqueUsers = getUniqueElements(users_all);
+        console.log(uniqueUsers)
+        io.emit('show-all-users',uniqueUsers)
+        io.emit('show-msg',format(user_name,msg))
+    })
+    user_name=''
+    socket.on('disconnected',msg=>{
+        io.emit('show-msg',format('Bot',msg))
+    })})
+let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
+db.query(sql,(err,res)=>{
+    if(err){
+        console.log(err);
+    }
+    else{
+        response.send(`${chat}`)
+    }
+})
 })
 
 
@@ -302,7 +368,8 @@ app.use('/', routerUpload);
 const router4=require('./router4.js')
 app.use('/',router4)
 
-app.listen(5000)
+server.listen(5000
+    )
 
 
 
