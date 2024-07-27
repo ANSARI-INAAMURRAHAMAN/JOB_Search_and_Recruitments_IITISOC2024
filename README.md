@@ -152,3 +152,10 @@ If you have any feedback, please reach out to us at your_email@example.com
 ## License
 
 [ISC](https://opensource.org/license/isc-license-txt/)
+
+
+## Steps to start the project:-
+1>Run nodemon or npm start for index.js
+2>You can configure the mysql database as per your choice 
+3>The static HTML files are stored inside the public folder which also will stored the images uploaded using multer
+4>Use the same directory structure as given in the project.
