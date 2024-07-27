@@ -44,7 +44,14 @@
                         <option value="WFH">Work From Home</option>
                     </select>
                 </div>
-                
+                <div class="location-select">
+                <select id="emp_type" name="emp_type">
+                    <option value="">Filter by employment_type</option>
+                    <option value="Full Time">Full Time</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Contract">Contract</option>
+                </select>
+            </div>
                 <div class="file-input">
                     <label for="company-logo">Upload Company Logo:</label>
                     <input type="file" id="company-logo" name="image_employer" accept="image/*" required>
@@ -64,11 +71,22 @@
 </html>
 
 <style>
+    html {
+    scroll-behavior: smooth;
+}
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --background-color: #ecf0f1;
+}
     body {
-    font-family: 'Roboto', sans-serif;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, rgba(173, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -83,19 +101,27 @@
 }
 
 header {
-    background-color: #2f4459;
-    color: white;
+    background: var(--primary-color);
     text-align: center;
-    padding: 1rem;
+    position: sticky;
+    padding: 1.2rem;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     position: relative;
     overflow: hidden;
 }
-
+h1, h2 {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.job-post h2, .applicants h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
 header h1 {
     margin: 0;
     position: relative;
     z-index: 1;
+    text-align: center;
 }
 
 header::before {
@@ -105,7 +131,7 @@ header::before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    background: transparent;
     animation: pulse 4s linear infinite;
 }
 
@@ -127,15 +153,17 @@ main {
 
 section {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+    transition: all 0.3s ease;
     width: 100%;
     max-width: 500px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 section:hover {
+    
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
@@ -171,6 +199,71 @@ form {
 input[type="text"],
 textarea,
 select,
+.dropdown-btn {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.dropdown-btn {
+    background-color: white;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+.dropdown-content label {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+}
+
+.dropdown-content input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-content input[type="checkbox"]:checked::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: bold;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+input[type="text"],
+textarea,
+select,
 input[type="file"] {
     width: 100%;
     padding: 0.75rem;
@@ -202,7 +295,7 @@ textarea {
 }
 
 input[type="submit"] {
-    background-color: #3498db;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 0.75rem;
@@ -218,7 +311,7 @@ input[type="submit"]:hover {
 }
 
 input[type="submit"]:active {
-    transform: scale(0.95);
+    background-color: var(--secondary-color);
 }
 
 .dropdown {
@@ -278,6 +371,19 @@ input[type="submit"]:active {
 
     section {
         width: 90%;
+    }
+}
+@media (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+    
+    section {
+        padding: 1.5rem;
+    }
+    
+    .job-post h2, .applicants h2 {
+        font-size: 1.5rem;
     }
 }
 
