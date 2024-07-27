@@ -53,7 +53,7 @@ db.connect((err)=>{
             <div class="links">
                 <a href="#" title="Notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
                 <a href="/seesetup_profile" title="Profile"><i class="fa-solid fa-user"></i> Profile</a>
-                <a href="#" title="Messages"><i class="fa-solid fa-envelope"></i> Messages</a>
+                <a href="../message/${req.session.seekerUsername}" title="Messages"><i class="fa-solid fa-envelope"></i> Messages</a>
                 <button style="font-size:1.5rem;" id="night-mode-toggle" aria-label="Toggle dark mode">
                     <i class="fa-solid fa-moon"></i>
                 </button>
@@ -120,7 +120,7 @@ router.get('/see_profile/:Name', authenticateRecruiter,(req,response)=>{
         <input type="submit" value="Resume" class="edit-btn"></form>
         <form action="../cover_letter/${res[0].username}">
             <input type="submit" value="Cover Letter" class="edit-btn"></form>
-            <form action="../message/${res[0].username}" method="post">
+            <form action="../message_rec/${res[0].username}">
         <input type="submit" value="Message" class="edit-btn"></form>${loginHtml8} 
             </div>
               </div>`
