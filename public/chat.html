@@ -3,172 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One-to-One Chat</title>
+    <title>ChatConnect</title>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.12.1/qs.min.js" integrity="sha512-vuLOE4Fh9lfxaN9n81Vl1HwrqMYz9WKoNmsHNC7Hz7OWX4k4O7FjCyQ1tQ82RJExao+Fas40RLiS5PCfVRGgnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f0f0;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            background-color: #075e54;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #ecf0f1;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            line-height: 1.4;
+        }
+
+        .message p {
+            margin: 0;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            margin-left: auto;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #fff;
+        }
+
+        .meta {
+            font-size: 0.8em;
+            color: #777;
+            margin-bottom: 3px;
+        }
+
+        .chat-form-container {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        #chat-form {
+            display: flex;
+        }
+
+        #msg {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .btn {
+            background-color: #075e54;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #054c44;
+        }
+
+        .leave-btn {
+            background-color: #c0392b;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .leave-btn:hover {
+            background-color: #a93226;
+        }
+    </style>
 </head>
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-header {
-    background-color: #075e54;
-    color: white;
-    padding: 10px;
-    text-align: center;
-}
-
-.chat-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #ddd;
-}
-
-.chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.message {
-    max-width: 70%;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    line-height: 1.4;
-}
-
-.sent {
-    align-self: flex-end;
-    background-color: #dcf8c6;
-}
-
-.received {
-    align-self: flex-start;
-    background-color: #fff;
-}
-
-.input-area {
-    display: flex;
-    padding: 10px;
-    background-color: #f0f0f0;
-}
-
-.input-area form {
-    display: flex;
-    width: 100%;
-}
-
-#message-input {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-}
-
-#send-button {
-    background-color: #075e54;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin-left: 10px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-</style>
 <body>
     <div class="chat-container">
         <header class="chat-header">
-          <h1> ChatConnect</h1>
-          <a href="index.html" class="btn">Leave Room</a>
+            <h1><i class="fas fa-comments"></i> ChatConnect</h1>
+            <a href="index.html" class="btn leave-btn">Leave Chat</a>
         </header>
-        <main class="chat-main">
-          <div class="chat-sidebar">
-            <h4>Active Users :</h4>
-            <ul id="users">
-            </ul>
-          </div>
-          <div class="chat-messages">
-                        <div class="chat-container">
-              </div>
-                        </div>
-          </div>
-        </main>
+        <div class="chat-messages"></div>
         <div class="chat-form-container">
-          <form id="chat-form">
-            <input
-              id="msg"
-              type="text"
-              placeholder="Enter Message"
-              required
-              autocomplete="off">
-            <button class="btn"><i class="fas fa-paper-plane"></i></button>
-          </form>
+            <form id="chat-form">
+                <input id="msg" type="text" placeholder="Type a message..." required autocomplete="off">
+                <button class="btn"><i class="fas fa-paper-plane"></i> Send</button>
+            </form>
         </div>
-      </div>
-      </body>
-      <script src="/socket.io/socket.io.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.12.1/qs.min.js" integrity="sha512-vuLOE4Fh9lfxaN9n81Vl1HwrqMYz9WKoNmsHNC7Hz7OWX4k4O7FjCyQ1tQ82RJExao+Fas40RLiS5PCfVRGgnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </div>
 
+    <script>
+        const socket = io();
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.querySelector('.chat-messages');
 
-<script>
-const socket=io();
-let data=''
-const {username,room}=Qs.parse(location.search,{
-    ignoreQueryPrefix:true
-});
+        // Get username from URL
+        const { username } = Qs.parse(location.search, {
+            ignoreQueryPrefix: true
+        });
 
-socket.emit('user-name',username)
-const chatmsg=document.querySelector('.chat-messages')
-document.getElementById('chat-form').addEventListener('submit',(e)=>{
-    e.preventDefault();
-    //console.log('event trigger')
-     data=document.getElementById("msg").value
-     socket.emit('ok',data);
-     //Clearing the input
-     document.getElementById("msg").value=''
-     document.getElementById("msg").focus()
-})
-function getUniqueElements(users_all) {
-    return users_all.filter((value, index, self) => self.indexOf(value) === index);
-}
-let i=0;
-const users_all=[]
-socket.on('show-all-users',users=>{
-    users_all.push(...users);
-    const uniqueUsers = getUniqueElements(users_all);
-    const user_list = document.getElementById('users');
-    user_list.innerHTML = uniqueUsers.map(user => `<li>${user}</li>`).join('');
-})
-    
-socket.on('show-msg',msg=>{
-    if(msg.username){
-    document.querySelector('.chat-messages').innerHTML=
-    document.querySelector('.chat-messages').innerHTML+`<div style="display: flex; flex-direction: column; background-color: #4a4a4a; color: #ffffff; padding: 8px; border-radius: 5px; margin: 10px 0; z-index: auto;">
-    <p style="font-size: 9px; margin: 0 0 3px;color: #ffcc00;">${msg.username}</p>
-    <p style="margin: 0 0 3px;font-size: 13px;">${msg.text}</p>
-    <p style="font-size: 8px; margin: 0; text-align: right;">${msg.time}</p></div>`;
-    }
-    chatmsg.scrollTop=chatmsg.scrollHeight;
-})
+        // Join chat
+        socket.emit('joinChat', username);
 
-document.querySelector('.btn').addEventListener('click',()=>{
-    socket.emit('disconnected', `${username} has disconnected!`);
-users_all = users_all.filter(el => el !== username);
-})
+        // Message from server
+        socket.on('message', message => {
+            outputMessage(message);
 
-</script>
+            // Scroll down
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
 
+        // Message submit
+        chatForm.addEventListener('submit', e => {
+            e.preventDefault();
 
+            // Get message text
+            const msg = e.target.elements.msg.value;
+
+            // Emit message to server
+            socket.emit('chatMessage', msg);
+
+            // Clear input
+            e.target.elements.msg.value = '';
+            e.target.elements.msg.focus();
+        });
+
+        // Output message to DOM
+        function outputMessage(message) {
+            const div = document.createElement('div');
+            div.classList.add('message');
+            if (message.username === username) {
+                div.classList.add('sent');
+            } else {
+                div.classList.add('received');
+            }
+            div.innerHTML = `
+                <p class="meta">${message.username} <span>${message.time}</span></p>
+                <p class="text">${message.text}</p>
+            `;
+            document.querySelector('.chat-messages').appendChild(div);
+        }
+    </script>
+</body>
+</html>
