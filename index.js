@@ -1,4 +1,4 @@
-const express = require('express');const path=require('path');
+const express = require('express');
 
 const mysql = require('mysql');
 const app = express();
@@ -60,7 +60,7 @@ db.connect((err)=>{
         console.log('Connection Established!')
     }})
 //Reading login and signup files
-let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='',chat='';
+let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='',chat='',received='';
 let loginHtml1 = '', loginHtml2 = '', loginHtml3 = '', loginHtml4 = '', loginHtml5 = '', loginHtml6 = '', loginHtml7='',loginHtml8='';
 //to make the reading synchronous
 const readHtmlFiles = async () => {
@@ -77,6 +77,7 @@ const readHtmlFiles = async () => {
     loginHtml10 = await readFile('./public/show_all_hp.html', 'utf-8');
     loginHtml11 = await readFile('./public/applyerror.html','utf-8')
     chat=await readFile('./public/chat.html','utf-8');
+    received=await readFile('./public/received.html','utf-8')
 };
 
 let username_seeker='';let username_recruiter='';
@@ -291,74 +292,17 @@ app.get('/see_applicants_jobs', authenticateRecruiter, (req, response) => {
 
     });
 });
-app.get('/message_rec/:Name',authenticateRecruiter,(req,response)=>{
-    io.on('connection', (socket) => {
-        let user_name=''
-    const format=require('../utils/messages.js')
-    console.log('connection success')
-    socket.on('user-name',(username)=>{  
-        users_all.push(username);
-        user_name=username;
-    })
-    socket.on('ok',msg=>{
-        console.log(user_name)
-        const uniqueUsers = getUniqueElements(users_all);
-        console.log(uniqueUsers)
-        io.emit('show-all-users',uniqueUsers)
-        io.emit('show-msg',format(user_name,msg))
-    })
-    user_name=''
-    socket.on('disconnected',msg=>{
-        io.emit('show-msg',format('Bot',msg))
-    })
-       /* 
-       socket.on('sendMessage', (message) => {
-          const { from, to, text } = message;
-          io.to(to).emit('message', { from, text });
-        });
-        */
-         let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
-    db.query(sql,(err,res)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            response.send(`${chat}`)
-        }
-    })
-        
+app.get('/message_rec/:name',authenticateRecruiter,(req,response)=>{
+    response.send(`${chat}`)
+                
 });
-})
+
+
 
 app.get('/message/:Name',authenticateSeeker,(req,response)=>{
-    io.on('connection', (socket) => {
-        let user_name=''
-    const format=require('../utils/messages.js')
-    console.log('connection success')
-    socket.on('user-name',(username)=>{  
-        users_all.push(username);
-        user_name=username;
-    })
-    socket.on('ok',msg=>{
-        console.log(user_name)
-        const uniqueUsers = getUniqueElements(users_all);
-        console.log(uniqueUsers)
-        io.emit('show-all-users',uniqueUsers)
-        io.emit('show-msg',format(user_name,msg))
-    })
-    user_name=''
-    socket.on('disconnected',msg=>{
-        io.emit('show-msg',format('Bot',msg))
-    })})
-let sql=`SELECT* FROM signup_seekers WHERE Username='${req.params.Name}'`
-db.query(sql,(err,res)=>{
-    if(err){
-        console.log(err);
-    }
-    else{
-        response.send(`${chat}`)
-    }
-})
+   
+    response.send(`${received}`)
+    
 })
 
 
