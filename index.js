@@ -1,32 +1,23 @@
 const express = require('express');
-
 const mysql = require('mysql');
 const app = express();
 app.use(express.static('public'));
-
 const router = require('./router'); 
 const router3 = require('./router3.js');
 const { readFile } = require('fs').promises;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 const http=require('http')
-
 const socketio=require('socket.io')
-
 const server = http.createServer(app);
 const io = socketio(server);
-
 const cloudinary = require('cloudinary');
-
 cloudinary.v2.config({
   cloud_name: 'dq2skbvkx',
   api_key: '782254474184389',
   api_secret: 'YOUR_API_SECRET',
   secure: true,
 });
-
-
-
 
 app.set("view engine","ejs")
 const session=require('express-session')
@@ -42,7 +33,6 @@ const {
 } = require('./middleware.js');
 
 const { upload, upload2, upload3 } = require('./multerConfig.js');
-app.set("view engine","ejs")
 
 //routes for login
 app.use('/', router);
@@ -53,11 +43,10 @@ const db = mysql.createConnection({
 });
 db.connect((err)=>{
     if(err){
-        //console.log(err)
         throw err;
     }
     else{
-        console.log('Connection Established!')
+        console.log('Connection Established!');
     }})
 //Reading login and signup files
 let loginHtml = '',loginHtml9='',loginHtml10='',loginHtml11='',chat='',received='';
@@ -312,24 +301,4 @@ app.use('/', routerUpload);
 const router4=require('./router4.js')
 app.use('/',router4)
 
-server.listen(5000
-    )
-
-
-
-/*res.forEach(e=>{
-       html= html+ `<body >
-       <h1>For the role of${e.job_name}</h1>
-        <div style="background-color: #fff; padding: 20px; border: 1px solid #ddd;
-        border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; max-width: 500px;">
-        <h2 style="margin-bottom: 20px; color: #007bff;">See the resume for the candidate</h2>
-        <h4 >Name of applicant: ${e.Applicants}</h4>
-        <p style="font-size: 16px; color: #333;">See the profile page of the applicant</p>
-        <form action="../see_profile/${e.Applicants}" method="get" style="margin-bottom: 10px;">
-            <input type="submit" value="See Profile" class="btn"
-            style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;">
-        </form>
-    </div>
-        ${loginHtml7}`+`<br>`
-       })
-       */
+server.listen(5000);
