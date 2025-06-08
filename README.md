@@ -1,166 +1,142 @@
-# Job Search and Recruitments
+# Job Search and Recruitments (MERN Stack)
 
-## Project Overview (Web team 15)
+## Project Overview (Web Team 15)
 
-The Job Search and Recruitments project aims to develop a web application that facilitates job searches and recruitment processes, providing a platform for job seekers and recruiters to connect efficiently.
+This project is a comprehensive job portal web application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack. It connects job seekers and recruiters efficiently, allowing users to browse job listings, apply for jobs, and manage recruitment processes seamlessly.
+
+---
 
 ## Team Members
 
-1. Abhijit Kashyap (Roll No: 220003001)
-2. Inaamurrahaman (Roll No: 220003009)
-3. Anshul Singh Jaiswal (Roll No: 220003010)
-4. Anshul Vijaywargiya (Roll No: 220003011)
+* Abhijit Kashyap (Roll No: 220003001)
+* Inaamurrahaman Ansari (Roll No: 220003009)
+* Anshul Singh Jaiswal (Roll No: 220003010)
+* Anshul Vijaywargiya (Roll No: 220003011)
 
-## Problem Statement
+---
 
-The project aims to develop a web application that facilitates job searches and recruitment processes, providing a platform for job seekers and recruiters to connect efficiently.
+## Features
 
-## Initial Approach
+* **User Authentication:** Secure login for both job seekers and recruiters using JWT.
+* **Job Listings:** Recruiters can post jobs; job seekers can browse and apply.
+* **Application Management:** Job seekers manage applications; recruiters view and filter candidates.
+* **Real-Time Chat:** WebSocket powered chat between job seekers and recruiters.
+* **File Uploads:** Upload resumes, cover letters with Multer.
+* **Image Storage:** Cloudinary integration for profile images and company logos.
+* **Filtering:** Search jobs by role, location, employment type.
+* **Responsive Design:** Works smoothly on all screen sizes.
+* **Session Management:** Robust backend with Express.js and MongoDB for data persistence.
 
-- Planned to use Express.js for the backend to manage routes, middleware, and sessions.
-- Decided on MySQL for database management due to its robustness and reliability.
-- Chose vanilla JavaScript for the frontend to keep the project lightweight and efficient.
-- Intended to implement WebSockets for real-time chat functionality between job seekers and recruiters.
-- Required a method to handle file uploads for resumes and cover letters as well as a solution for storing images.
-
-## Final Iteration and Amount of Work Done
-
-### Backend
-
-- Set up Express.js to handle all backend operations, including routing and session management.
-- Configured MySQL to store and retrieve data, ensuring smooth integration with Express.js.
-- Used Multer to handle file uploads for resumes and cover letters.
-- Integrated Cloudinary to store and manage images.
-
-### Frontend
-
-- Developed the frontend using vanilla JavaScript, focusing on performance and simplicity.
-- Incorporated various animations and transitions to enhance the user experience.
-- Ensured the frontend is responsive across different devices and screen sizes.
-
-### Real-Time Communication
-
-- Implemented WebSockets to facilitate real-time communication in the web chat feature.
-
-### Additional Features
-
-- Ensured proper version control using GitHub.
-- Implemented functionalities for recruiter-candidate interactions. If the recruiter is interested in a candidate, they can drop a message.
-- Provided filtering options for candidates to search jobs based on job role, location, and employment type.
-- Enabled candidates to set up profiles where they can add skills, bio, job type desired, etc. The profiles are visible to recruiters.
-- Created separate routes and session types for job seekers and recruiters.
-- Allowed recruiters to post jobs for any company they work for.
-- Added a query posting feature for contacting the website owners.
-
-## Results
-
-- The web application successfully manages user sessions and securely stores user data in MySQL.
-- The frontend built with vanilla JavaScript is responsive, user-friendly, and enhanced with animations and transitions.
-- The web chat feature powered by WebSockets allows real-time communication between job seekers and recruiters.
-- Multer efficiently handles file uploads for resumes and cover letters.
-- Cloudinary integration provides a robust solution for storing and managing images.
-- Positive feedback was received for the smooth, interactive, and visually appealing user experience.
-
-## Possible Improvements
-
-- Enhance security measures for session management and data storage.
-- Optimize the WebSocket implementation to handle a larger number of concurrent users.
-- Add more features to the web chat, such as message history and media sharing.
-- Improve the file upload process to support larger files and various file formats.
-- Further refine animations and transitions for an even better user experience.
-- Refactor the frontend code for better maintainability and scalability.
-
-## Conclusion
-
-The project achieved its goals of creating a robust web application with efficient session management, data storage, file uploads, real-time communication, and a responsive, animated frontend. Valuable skills were learned in using Express.js, MySQL, Multer, Cloudinary, and WebSockets. Future improvements can further enhance the application's functionality and user experience.
-
-## Run Locally
-
-Clone the project:
-
-\```bash
-git clone https://github.com/deep-yad/JOB_Search_and_Recruitments_IITISOC2024.git
-\```
-
-Go to the project directory:
-
-\```bash
-cd Job_Search_and_Recruitments
-\```
-
-### Client
-
-Go to the client directory:
-
-\```bash
-cd client
-\```
-
-Install dependencies:
-
-\```bash
-npm install
-\```
-
-Start the react server:
-
-\```bash
-npm start
-\```
-
-### Server
-
-Open a new terminal and go to the server directory:
-
-\```bash
-cd server
-\```
-
-Install dependencies:
-
-\```bash
-npm install
-\```
-
-Start the server:
-
-\```bash
-node server
-\```
-
-## Lessons Learned
-
-We learned teamwork, collaboration, and various technologies including Git, GitHub, and the MERN stack. We utilized resources like YouTube, ChatGPT, StackOverflow, and official documentation to build this web application.
+---
 
 ## Tech Stack
 
-**Client:** Vanilla JavaScript, CSS
+| Layer          | Technology          |
+| -------------- | ------------------- |
+| Frontend       | React.js, CSS       |
+| Backend        | Node.js, Express.js |
+| Database       | MongoDB Atlas       |
+| Authentication | JWT, Bcrypt         |
+| File Uploads   | Multer              |
+| Image Storage  | Cloudinary          |
+| Real-time Comm | WebSockets          |
 
-**Server:** Node.js, Express.js, MySQL
+---
 
-## Feedback
+## Getting Started
 
-If you have any feedback, please reach out to us at your_email@example.com
+### Prerequisites
+
+* Node.js (v22.2.0 or above recommended)
+* MongoDB Atlas account (or local MongoDB server)
+* Cloudinary account (for image storage)
+
+---
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/deep-yad/JOB_Search_and_Recruitments_IITISOC2024.git
+
+# Go into the backend directory
+cd JOB_Search_and_Recruitments_IITISOC2024/server
+npm install
+
+# Go into the client directory (frontend)
+cd ../client
+npm install
+```
+
+---
+
+### Configuration
+
+Create a `.env` file in the **server** folder with the following variables:
+
+```
+PORT=your_port_here
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+FRONTEND_URL=http://localhost:3000
+```
+
+---
+
+### Running the App Locally
+
+1. Start the backend server:
+
+```bash
+cd server
+npm start
+```
+
+2. Start the frontend React app:
+
+```bash
+cd ../client
+npm start
+```
+
+3. Open your browser at [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Project Highlights
+
+* Real-time messaging between recruiters and candidates via WebSocket.
+* Secure JWT-based authentication for different user roles.
+* Robust job posting, searching, and filtering system.
+* Resume and cover letter uploads using Multer.
+* Profile management for job seekers with skills, bio, and preferences.
+* Responsive, animated React frontend for smooth user experience.
+
+---
+
+## Possible Improvements
+
+* Enhance chat with media sharing and message history.
+* Optimize WebSocket to support more concurrent users.
+* Add file format and size validation for uploads.
+* Implement better role-based access control.
+* Improve frontend code structure and scalability.
+
+---
 
 ## Authors
 
-- [Abhijit Kashyap](https://github.com/Abhijitkashyap97)
-- [Inaamurrahaman Ansari](https://github.com/ANSARI-INAAMURRAHAMAN)
-- [Anshul Singh Jaiswal](https://github.com/AnshulSinghJaiswal)
-- [Anshul Vijaywargiya](https://github.com/AnshulVijaywargiya)
+* [Abhijit Kashyap](https://github.com/Abhijitkashyap97)
+* [Inaamurrahaman Ansari](https://github.com/ANSARI-INAAMURRAHAMAN)
+* [Anshul Singh Jaiswal](https://github.com/AnshulSinghJaiswal)
+* [Anshul Vijaywargiya](https://github.com/AnshulVijaywargiya)
+
+---
 
 ## License
 
-[ISC](https://opensource.org/license/isc-license-txt/)
+[ISC License](https://opensource.org/license/isc-license-txt/)
 
-
-## Steps to start the project:-
-1>Run nodemon or npm start for index.js
-
-2>You can configure the mysql database as per your choice 
-
-3>The static HTML files are stored inside the public folder which also will stored the images uploaded using multer
-
-4>Use the same directory structure as given in the project.
-
-5>The chat_mssgs.sql conatins the table data previously
