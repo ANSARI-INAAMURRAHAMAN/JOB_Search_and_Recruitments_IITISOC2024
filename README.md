@@ -7,9 +7,8 @@ This project is a comprehensive job portal web application built using the MERN 
 ---
 
 ## Team Members
-
-* Abhijit Kashyap (Roll No: 220003001)
 * Inaamurrahaman Ansari (Roll No: 220003009)
+* Abhijit Kashyap (Roll No: 220003001)
 * Anshul Singh Jaiswal (Roll No: 220003010)
 * Anshul Vijaywargiya (Roll No: 220003011)
 
@@ -122,15 +121,13 @@ npm start
 * Enhance chat with media sharing and message history.
 * Optimize WebSocket to support more concurrent users.
 * Add file format and size validation for uploads.
-* Implement better role-based access control.
 * Improve frontend code structure and scalability.
 
 ---
 
 ## Authors
-
-* [Abhijit Kashyap](https://github.com/Abhijitkashyap97)
 * [Inaamurrahaman Ansari](https://github.com/ANSARI-INAAMURRAHAMAN)
+* [Abhijit Kashyap](https://github.com/Abhijitkashyap97)
 * [Anshul Singh Jaiswal](https://github.com/AnshulSinghJaiswal)
 * [Anshul Vijaywargiya](https://github.com/AnshulVijaywargiya)
 
